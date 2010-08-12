@@ -1,8 +1,8 @@
 baselayout
 man-pages-3.24
-linux-headers-2.6.32.11
-glibc-2.10.1
-binutils-2.20
+linux-headers-2.6.33
+eglibc-2.12-20100729-r11028
+binutils-2.20.1
 gmp-4.3.2
 mpfr-2.4.2
 gcc-4.4.3
