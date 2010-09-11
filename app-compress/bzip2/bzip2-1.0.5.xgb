@@ -13,8 +13,8 @@ HOMEPAGE="http://www.bzip.org/"
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
 
-SRC_URI="http://www.bzip.org/$V/$N-$V$R.tar.gz \
-http://www.linuxfromscratch.org/patches/lfs/6.4/bzip2-1.0.5-install_docs-1.patch"
+SRC_URI="http://www.bzip.org/$V/$N-$V$R.tar.gz "
+#http://www.linuxfromscratch.org/patches/lfs/6.4/bzip2-1.0.5-install_docs-1.patch"
 
 
 # Binary package URI.
@@ -41,7 +41,7 @@ xgb_unpack()
 	cd $N-$V$R
 
 	#patch it.
-	patch -p1 < $XGPATH_SOURCE/bzip2-1.0.5-install_docs-1.patch
+#	patch -p1 < $XGPATH_SOURCE/bzip2-1.0.5-install_docs-1.patch
 	err_check "patch $N failed."
 
 	#The following command ensures installation of symbolic links 
@@ -76,7 +76,7 @@ xgb_build()
 	make clean
 	echo "clean $N-$V$R failed"
 
-	make
+	make 
 	echo "make $N-$V$R failed"
 }
 

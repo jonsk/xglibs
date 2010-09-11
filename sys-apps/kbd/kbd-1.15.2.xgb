@@ -14,8 +14,8 @@ HOMEPAGE="http://freshmeat.net/projects/kbd"
 # $V = package version, such as 2.6.10
 
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="ftp://ftp.kernel.org/pub/linux/utils/kbd/kbd-1.15.2.tar.bz2 \
-http://www.c-lfs.de/download/molli/patch/kbd-1.15.2-backspace-1.patch"
+SRC_URI="ftp://ftp.kernel.org/pub/linux/utils/kbd/kbd-1.15.2.tar.gz "
+#http://www.c-lfs.de/download/molli/patch/kbd-1.15.2-backspace-1.patch"
 
 
 # Binary package URI.
@@ -35,14 +35,14 @@ xgb_unpack()
 {
 	#unpard file from $XGPATH_SOURCE to current directory.
 	echo "Unpacking to `pwd`"
-	tar xf $XGPATH_SOURCE/$N-$V$R.tar.bz2
+	tar xf $XGPATH_SOURCE/$N-$V$R.tar.gz
 	err_check "unpack $N failed."
 
 	#fist, cd build directory
 	cd $N-$V$R
 
 	#patch.
-	patch -p1 -i $XGPATH_SOURCE/kbd-1.15.2-backspace-1.patch
+#	patch -p1 -i $XGPATH_SOURCE/kbd-1.15.2-backspace-1.patch
 	err_check "patch $N failed."
 }
 

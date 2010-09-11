@@ -3,10 +3,10 @@
 # Xiange Linux build scripts
 
 # Short one-line description of this package.
-DESCRIPTION="Standard EXT2/EXT3/EXT4 filesystem utilities"
+DESCRIPTION="util-linux is a random collection of Linux utilities"
 
 # Homepage, not used by Portage directly but handy for developer reference
-HOMEPAGE="http://e2fsprogs.sourceforge.net/"
+HOMEPAGE="http://git.kernel.org/?p=utils/util-linux-ng/util-linux-ng.git"
 
 # Point to any required sources; these will be automatically downloaded by
 # gpkg. 
@@ -14,7 +14,7 @@ HOMEPAGE="http://e2fsprogs.sourceforge.net/"
 # $V = package version, such as 2.6.10
 
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="http://prdownloads.sourceforge.net/e2fsprogs/$N-$V$R.tar.gz"
+SRC_URI="http://www.kernel.org/pub/linux/utils/util-linux-ng/v2.17/$N-$V$R.tar.bz2"
 
 
 # Binary package URI.
@@ -22,10 +22,10 @@ BIN_URI=""
 
 
 # Runtime Depend
-RDEPEND="util-linux-ng"
+RDEPEND="ncurses"
 
 # Build time depend
-DEPEND="${RDEPEND} pkg-config"
+DEPEND="${RDEPEND}"
 
 
 
@@ -34,26 +34,27 @@ xgb_unpack()
 {
 	#unpard file from $XGPATH_SOURCE to current directory.
 	echo "Unpacking ..."
-	tar xf $XGPATH_SOURCE/$N-$V$R.tar.gz
+#	tar xf $XGPATH_SOURCE/$N-$V$R.tar.bz2
 }
 
 #config
 xgb_config()
 {
 	#fist, cd build directory
-	cd $N-$V$R
-
-	#create build direcory
-	mkdir build
-	cd build
-	err_check "create build directory failed"
+#	cd $N-$V$R
+	cd /tmp/util-linux-ng-2.18/
+#	sed -e 's@etc/adjtime@var/lib/hwclock/adjtime@g' \
+#	-i $(grep -rl '/etc/adjtime' .)
+#	mkdir -pv /var/lib/hwclock
 
 	#second, add package specified config params to XGB_CONFIG
-	XGB_CONFIG+=" --enable-elf-shlibs --disable-libblkid\
-		--disable-libuuid --disable-uuidd --disable-fsck"
+	#fallocate will cause compile error.
+#	XGB_CONFIG+=" --enable-arch --enable-partx --enable-write --disable-wall "
+		
+
 
 	#Third, call configure with $XGB_CONFIG
-	../configure $XGB_CONFIG
+#	./configure $XGB_CONFIG
 }
 
 #build
@@ -68,8 +69,7 @@ xgb_install()
 {
 	#install everything to $XGPATH_DEST
 	make DESTDIR=$XGPATH_DEST install
-	err_check "Install $N-$V$R failed."
-
-	make DESTDIR=$XGPATH_DEST install-libs
+	mkdir -pv $XGPATH_DEST/var/lib/hwclock
 }
+
 

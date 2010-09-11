@@ -61,12 +61,13 @@ xgb_unpack()
 		patch -p0 < $XGPATH_SOURCE/$name
 		err_check "patch $name failed"
 	done
+#	patch -Np1 -i $XGPATH_SOURCE/bash-4.1-fixes-2.patch
 }
 
 #config
 xgb_config()
 {
-	XGB_CONFIG+=" --bindir=/bin \
+	XGB_CONFIG+=" --bindir=/bin --prefix=/usr \
 	    	--htmldir=/usr/share/doc/bash-4.1 --without-bash-malloc \
 	        --with-installed-readline"
 
@@ -79,6 +80,9 @@ xgb_build()
 {
 	#run make in current directory
 	make
+	chown -Rv nobody .
+	su-tools nobody -s /bin/bash -c "make tests"
+
 }
 
 #install

@@ -14,7 +14,7 @@ HOMEPAGE="http://freshmeat.net/projects/sysvinit/"
 # $V = package version, such as 2.6.10
 
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="ftp://ftp.cistron.nl/pub/people/miquels/$N/$N-$V$R.tar.gz"
+SRC_URI="http://download.savannah.gnu.org/releases/sysvinit/sysvinit-2.88dsf.tar.bz2"
 
 
 # Binary package URI.
@@ -33,15 +33,15 @@ xgb_unpack()
 {
 	#unpard file from $XGPATH_SOURCE to current directory.
 	echo "Unpacking to `pwd`"
-	tar xf $XGPATH_SOURCE/$N-$V$R.tar.gz
+	tar xf $XGPATH_SOURCE/$N-$V$R.tar.bz2
 	err_check "unpack $N failed."
 
 	#fist, cd build directory
 	cd $N-$V$R
 
 	#all program was installed earlier by Util-linux-ng
-	sed -i -e 's/utmpdump wall/utmpdump/' \
-	       -e 's/mountpoint.1 wall.1/mountpoint.1/' src/Makefile
+#	sed -i -e 's/utmpdump wall/utmpdump/' \
+#	       -e 's/mountpoint.1 wall.1/mountpoint.1/' src/Makefile
 	err_check "patch $N failed."
 }
 
@@ -52,6 +52,7 @@ xgb_build()
 	echo "make $N-$V$R..."
 
 	#run make in current directory
+	make -C src clobber
 	make -C src
 }
 

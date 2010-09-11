@@ -35,14 +35,15 @@ xgb_unpack()
 {
 	#unpard file from $XGPATH_SOURCE to current directory.
 	echo "Unpacking ..."
-	tar xf $XGPATH_SOURCE/$N-$V$R.tar.bz2
+#	tar xf $XGPATH_SOURCE/$N-$V$R.tar.bz2
 }
 
 #config
 xgb_config()
 {
 	#fist, cd build directory
-	cd $N-$V$R
+#	cd $N-$V$R
+	cd /tmp/perl-5.12.1/
 
 	#This version of Perl now builds the Compress::Raw::Zlib module. 
 	#By default Perl will use an internal copy of the Zlib source 
@@ -56,8 +57,8 @@ xgb_config()
 	#second, add package specified config params to XGB_CONFIG
 	XGB_CONFIG="-des -Dprefix=/usr 	      \
 		-Dvendorprefix=/usr           \
-		-Dman1dir=/usr/share/man/man1 \
-		-Dman3dir=/usr/share/man/man3 "
+		-Dman1dir=/usr/share/man/man33 \
+		-Dman3dir=/usr/share/man/man33 "
 
 	#Third, call configure with $XGB_CONFIG
 	sh Configure $XGB_CONFIG -Dpager="/usr/bin/less -isR"
@@ -71,6 +72,7 @@ xgb_build()
 {
 	#run make in current directory
 	make
+#	make test
 }
 
 #install
@@ -78,6 +80,7 @@ xgb_install()
 {
 	#install everything to $XGPATH_DEST
 	make DESTDIR=$XGPATH_DEST install
+	rm $XGPATH_DEST/usr/share/man/man33 -rf
 }
 
 

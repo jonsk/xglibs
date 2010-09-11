@@ -50,6 +50,11 @@ xgb_unpack()
 	echo "patch 002 ..."
 	patch -p0 < $XGPATH_SOURCE/readline61-002
 	err_check "patch 002 failed"
+	sed -i '/MV.*old/d' Makefile.in
+	sed -i '/{OLDSUFF}/c:' support/shlib-install
+	sed -i -e 's/0x0600/0x0601/' \
+       -e 's/6\.0/6.1/' \
+       -e 's/RL_VERSION_MINOR\t0/RL_VERSION_MINOR\t1/' readline.h
 }
 
 #config

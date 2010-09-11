@@ -33,7 +33,7 @@ xgb_unpack()
 {
 	#unpard file from $XGPATH_SOURCE to current directory.
 	echo "Unpacking ..."
-	tar xf $XGPATH_SOURCE/$N-$V$R.tar.bz2
+#	tar xf $XGPATH_SOURCE/$N-$V$R.tar.bz2
 }
 
 #config
@@ -45,12 +45,6 @@ xgb_config()
 	#libiberty: user the one from binutils
 	sed -i 's/install_to_$(INSTALL_DEST) //' libiberty/Makefile.in
 
-	#enable -formit-frame-pointer
-	sed -i 's/^XCFLAGS =$/& -fomit-frame-pointer/' gcc/Makefile.in
-
-	#disable hearder fix.
-	sed -i 's@\./fixinc\.sh@-c true@' gcc/Makefile.in
-
 	#mkdir build
 	mkdir ../build
 	cd ../build
@@ -58,14 +52,24 @@ xgb_config()
 
 
 	#second, add package specified config params to XGB_CONFIG
-	XGB_CONFIG+="--libexecdir=/usr/lib --enable-shared \
-		--enable-threads=posix --enable-__cxa_atexit \
-		--enable-clocale=gnu --enable-languages=c,c++ \
-		--disable-bootstrap"
+	XGB_CONFIG+=" --prefix=/usr --libexecdir=/usr/lib --enable-shared \
+--enable-threads=posix --enable-__cxa_atexit --enable-c99 \
+--enable-long-long --enable-clocale=gnu  --enable-languages=c,c++  \
+--disable-multilib --disable-bootstrap "
+
+
+
 
 
 	#Third, call configure with $XGB_CONFIG
-	../$N-$V$R/configure $XGB_CONFIG
+	export CC="ccache gcc"
+	export CPP="ccache cpp"
+	export CXX="ccache g++"
+	unset CFLAGS LIBCXXFLAGS LIBCXXFLAGS_FOR_TARGET STAGE2_CXXFLAGS STAGE4_CXXFLAGS STAGE3_CXXFLAGS  STAGE4_TFLAGS STAGEprofile_CFLAGS STAGEprofile_CXXFLAGS STAGEprofile_TFLAGS STAGEfeedback_CXXFLAGS
+	../$N-$V$R/configure  --prefix=/usr --libexecdir=/usr/lib --enable-shared \
+	--enable-threads=posix --enable-__cxa_atexit --enable-c99 \
+	--enable-long-long --enable-clocale=gnu  --enable-languages=c,c++  \
+	--disable-multilib --disable-bootstrap --with-system-zlib
 }
 
 #build
@@ -73,6 +77,8 @@ xgb_build()
 {
 	#run make in current directory
 	make
+	make -k check
+	../gcc-4.5.1/contrib/test_summary
 }
 
 #install
@@ -101,8 +107,12 @@ xgb_postinst()
 
 	grep -o '/usr/lib.*/crt[1in].*succeeded' dummy.log
 	err_check "[Error] gcc: start .o file check failed."
-	grep -B1 '^ /usr/include' dummy.log
+	grep -B4 '^ /usr/include' dummy.log
 	err_check "[Error] gcc: include dir check failed."
+	grep 'SEARCH.*/usr/lib' dummy.log |sed 's|; |\n|g'
+	grep "/lib.*/libc.so.6 " dummy.log
+	grep found dummy.log
+	rm -v dummy.c a.out dummy.log
 }
 
 

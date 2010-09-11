@@ -32,17 +32,18 @@ xgb_unpack()
 {
 	#unpard file from $XGPATH_SOURCE to current directory.
 	echo "Unpacking ..."
-	tar xf $XGPATH_SOURCE/$N-$V$R.tar.gz
+#	tar xf $XGPATH_SOURCE/$N-$V$R.tar.gz
 }
 
 #config
 xgb_config()
 {
 	#fist, cd build directory
-	cd $N-$V$R
+#	cd $N-$V$R
+	cd /tmp/ncurses-5.7/
 
 	#second, add package specified config params to XGB_CONFIG
-	XGB_CONFIG+=" --with-shared --without-debug --enable-widec"
+	XGB_CONFIG+="--prefix=/usr --with-shared --without-debug --enable-widec"
 
 	#Third, call configure with $XGB_CONFIG
 	./configure $XGB_CONFIG
@@ -84,8 +85,8 @@ xgb_install()
 	ln -sfv libncurses.a $XGPATH_DEST/usr/lib/libcurses.a
 
 	#docs
-	mkdir -p $XGPATH_DEST/usr/share/doc/$N-$V$R
-	cp -v -R doc/* $XGPATH_DEST/usr/share/doc/$PackageName
+#	mkdir -p $XGPATH_DEST/usr/share/doc/$N-$V$R
+#	cp -v -R doc/* $XGPATH_DEST/usr/share/doc/$PackageName
 }
 
 

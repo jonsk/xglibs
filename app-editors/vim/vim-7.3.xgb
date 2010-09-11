@@ -13,15 +13,11 @@ HOMEPAGE="http://www.vim.org/"
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
 
-SRC_URI="ftp://ftp.vim.org/pub/vim/unix/vim-7.2.tar.bz2 \
-ftp://ftp.vim.org/pub/vim/patches/7.2/7.2.001-100.gz \
-ftp://ftp.vim.org/pub/vim/patches/7.2/7.2.101-200.gz \
-ftp://ftp.vim.org/pub/vim/patches/7.2/7.2.201-300.gz \
-ftp://ftp.vim.org/pub/vim/patches/7.2/7.2.301-400.gz "
+SRC_URI="ftp://ftp.vim.org/pub/vim/unix/vim-7.3.tar.bz2 "
 
-VIM_PATCH_MIN=401
-VIM_PATCH_MAX=446
-VIM_PATCH_URL="ftp://ftp.vim.org/pub/vim/patches/7.2"
+VIM_PATCH_MIN=001
+VIM_PATCH_MAX=003
+VIM_PATCH_URL="ftp://ftp.vim.org/pub/vim/patches/7.3"
 
 
 # Binary package URI.
@@ -44,7 +40,7 @@ xgb_init()
 
 	for ((i=$VIM_PATCH_MIN; i<=$VIM_PATCH_MAX; i++))
 	do
-		name=`printf "7.2.%03d" $i`
+		name=`printf "7.3.%03d" $i`
 		SRC_URI+=" $VIM_PATCH_URL/$name "
 	done
 }
@@ -57,24 +53,20 @@ xgb_unpack()
 
 	#unpard file from $XGPATH_SOURCE to current directory.
 	echo "Unpacking to `pwd`"
-	tar xf $XGPATH_SOURCE/$N-7.2.tar.bz2
+	tar xf $XGPATH_SOURCE/$N-7.3.tar.bz2
 	err_check "unpack $N failed."
 
 	#fist, cd build directory
 	tar xf $XGPATH_SOURCE/vim-7.2-lang.tar.gz
-	cd vim72
-	err_check "enter build directory failed."
+	cd vim73
+	err_check "enter tar xf lang file."
 
 	#patch 0-100
 	echo "patching ..."
-	gzip -dc $XGPATH_SOURCE/7.2.001-100.gz | patch -fp0
-	gzip -dc $XGPATH_SOURCE/7.2.101-200.gz | patch -fp0
-	gzip -dc $XGPATH_SOURCE/7.2.201-300.gz | patch -fp0
-	gzip -dc $XGPATH_SOURCE/7.2.301-400.gz | patch -fp0
 
 	for ((i=$VIM_PATCH_MIN; i<=$VIM_PATCH_MAX; i++))
 	do
-		name=`printf "7.2.%03d" $i`
+		name=`printf "7.3.%03d" $i`
 		patch -fp0 -i $XGPATH_SOURCE/$name
 	done
 
@@ -89,7 +81,8 @@ xgb_config()
 
 
 	#second, add package specified config params to XGB_CONFIG
-	XGB_CONFIG+=" --enable-multibyte --enable-xim --enable-pythoninterp --enable-tclinterp --enable-rubyinterp   "
+	XGB_CONFIG+=" --enable-multibyte --prefix=/usr \
+--enable-xim --enable-pythoninterp --enable-rubyinterp  "
 
 	#Third, call configure with $XGB_CONFIG
 	./configure $XGB_CONFIG
@@ -166,4 +159,5 @@ xgb_install()
 	#write vimrc
 	xgb_vimrc
 }
+
 

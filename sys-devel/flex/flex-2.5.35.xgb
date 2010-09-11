@@ -42,9 +42,11 @@ xgb_config()
 
 	#fist, cd build directory
 	cd $N-$V$R
+	patch -Np1 -i $XGPATH_SOURCE/flex-2.5.35-gcc44-1.patch
+
 
 	#second, add package specified config params to XGB_CONFIG
-	#XGB_CONFIG+=" --foo --bar "
+	XGB_CONFIG+=" --prefix=/usr"
 
 	#Third, call configure with $XGB_CONFIG
 	./configure $XGB_CONFIG
@@ -92,9 +94,9 @@ EOF
 	err_check "install $N failed"
 
 	#install docs.
-	mkdir -p $XGPATH_DEST/usr/share/doc/$N-$V$R
-	cp -v doc/flex.pdf \
-	         $XGPATH_DEST/usr/share/doc/$N-$V$R
+#	mkdir -p $XGPATH_DEST/usr/share/doc/$N-$V$R
+#	cp -v doc/flex.pdf \
+#	         $XGPATH_DEST/usr/share/doc/$N-$V$R
 	err_check "install $N pdf failed"
 }
 

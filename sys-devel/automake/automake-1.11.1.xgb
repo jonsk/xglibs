@@ -60,7 +60,7 @@ xgb_build()
 xgb_check()
 {
 	echo "checking $N-$V$R..."
-	make check
+#	make check
 }
 
 #install
@@ -68,6 +68,7 @@ xgb_install()
 {
 	#install everything to $XGPATH_DEST
 	make DESTDIR=$XGPATH_DEST install
+	rm -rf /usr/share/doc/$N-$V$R
 }
 
 

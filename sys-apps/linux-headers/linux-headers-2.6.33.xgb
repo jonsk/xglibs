@@ -35,16 +35,17 @@ DEPEND="${RDEPEND}"
 xgb_unpack()
 {
 	echo "Unpacking ..."
-	tar xf $XGPATH_SOURCE/linux-$V$R.tar.bz2
+#	tar xf $XGPATH_SOURCE/linux-$V$R.tar.bz2
 }
 
 #build
 xgb_build()
 {
-	cd linux-$V$R
+#	cd linux-$V$R
+	cd /tmp/linux-2.6.33
 
-	make mrproper
-	make headers_check
+	make  mrproper
+	make  headers_check
 	err_check "[Error] linux_header: check falied."
 
 }
@@ -54,7 +55,8 @@ xgb_install()
 {
 	mkdir -p $XGPATH_DEST/usr
 
-	make INSTALL_HDR_PATH=$XGPATH_DEST/usr headers_install
+	make  \
+		INSTALL_HDR_PATH=$XGPATH_DEST/usr headers_install
 	err_check "[Error] linux_header: install falied."
 }
 

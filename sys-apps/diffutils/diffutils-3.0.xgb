@@ -3,17 +3,17 @@
 # Xiange Linux build scripts
 
 # Short one-line description of this package.
-DESCRIPTION="Tools necessary to build programs"
+DESCRIPTION="Tools to make diffs and compare files"
 
 # Homepage, not used by Portage directly but handy for developer reference
-HOMEPAGE="http://www.gnu.org/software/binutils/"
+HOMEPAGE="http://www.gnu.org/software/diffutils/diffutils.html"
 
 # Point to any required sources; these will be automatically downloaded by
 # gpkg. 
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
 
-SRC_URI="http://ftp.gnu.org/gnu/binutils/$N-$V$R.tar.bz2"
+SRC_URI="http://ftp.gnu.org/pub/gnu/diffutils/$N-$V$R.tar.gz"
 
 
 # Binary package URI.
@@ -27,46 +27,48 @@ RDEPEND=""
 DEPEND="${RDEPEND}"
 
 
+
 #unpack
 xgb_unpack()
 {
 	#unpard file from $XGPATH_SOURCE to current directory.
-	echo "Unpacking ..."
-	tar xf $XGPATH_SOURCE/$N-$V$R.tar.bz2
+	echo "Unpacking to `pwd`"
+	tar xf $XGPATH_SOURCE/$N-$V$R.tar.gz
 }
 
 #config
 xgb_config()
 {
-	#cd build directory.
-	#cd $N-$V$R
-	mkdir build
-	cd build
-	err_check "enter directory build failed"
+	echo "config $N-$V$R..."
 
-	#run configure
-	XGB_CONFIG+=" --enable-shared "
+	#fist, cd build directory
+	cd $N-$V$R
 
-	../$N-$V$R/configure $XGB_CONFIG
+	#second, add package specified config params to XGB_CONFIG
+	XGB_CONFIG+=" --prefix=/usr"
+
+	#Third, call configure with $XGB_CONFIG
+	./configure $XGB_CONFIG
+	sed -i 's@\(^#define DEFAULT_EDITOR_PROGRAM \).*@\1"vi"@' lib/config.h
+
 }
 
 #build
 xgb_build()
 {
+	echo "make $N-$V$R..."
+
 	#run make in current directory
-	make tooldir=/usr
+	make
 }
 
 #install
 xgb_install()
 {
-	#install everything to $XGPATH_DEST
-	make DESTDIR="$XGPATH_DEST" tooldir=/usr install
-	err_check "install binutils failed"
+	echo "install to $XGPATH_DEST"
 
-	#header file
-	cp -v ../$N-$V$R/include/libiberty.h "$XGPATH_DEST/usr/include"
-	err_check "[Error] binutils: libiberty.h copy failed."
+	#install everything to $XGPATH_DEST
+	make DESTDIR=$XGPATH_DEST install
 }
 
 

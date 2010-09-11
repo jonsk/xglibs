@@ -40,7 +40,7 @@ xgb_unpack()
 	cd $N-$V$R
 	
 	#patch it.
-	patch -p1 -i $XGPATH_SOURCE/gettext-0.17-upstream_fixes-2.patch
+#	patch -p1 -i $XGPATH_SOURCE/gettext-0.17-upstream_fixes-2.patch
 	err_check "patch $N failed."
 }
 

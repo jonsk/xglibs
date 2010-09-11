@@ -44,7 +44,7 @@ xgb_config()
 	cd $N-$V$R
 
 	#second, add package specified config params to XGB_CONFIG
-	XGB_CONFIG+=" --sysconfdir=/etc "
+	XGB_CONFIG+=" --prefix=/usr --sysconfdir=/etc "
 
 	#Third, call configure with $XGB_CONFIG
 	./configure $XGB_CONFIG
@@ -66,5 +66,7 @@ xgb_install()
 
 	#install everything to $XGPATH_DEST
 	make DESTDIR=$XGPATH_DEST install
+	mkdir $XGPATH_DEST/bin
+	mv -v $XGPATH_DEST/usr/bin/less $XGPATH_DEST/bin
 }
 

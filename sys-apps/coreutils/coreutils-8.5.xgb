@@ -41,6 +41,7 @@ xgb_config()
 {
 	#fist, cd build directory
 	cd $N-$V$R
+	patch -Np1 -i $XGPATH_SOURCE/coreutils-8.5-i18n-1.patch
 
 	#second, add package specified config params to XGB_CONFIG
 	XGB_CONFIG+=" --enable-no-install-program=kill,uptime "
@@ -54,6 +55,11 @@ xgb_build()
 {
 	#run make in current directory
 	make
+	make NON_ROOT_USERNAME=nobody check-root
+	echo "dummy:x:1000:nobody" >> /etc/group
+	chown -Rv nobody . 
+	su-tools nobody -s /bin/bash -c "make RUN_EXPENSIVE_TESTS=yes check"
+	sed -i '/dummy/d' /etc/group
 }
 
 #install

@@ -11,7 +11,7 @@ HOMEPAGE="http://code.google.com/p/xiangelinux"
 # gpkg. 
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
-SRC_URI="http://xiangelinux.googlecode.com/files/$N-$V.tar.bz2"
+SRC_URI="http://xiangelinux.googlecode.com/files/baselayout-loongson64-1.0.tar"
 
 
 # Binary package URI.
@@ -31,7 +31,7 @@ xgb_unpack()
 {
 	echo "[Unpack] dir=`pwd`"
 	#current directory is in $XGPATH_UNPACK
-	tar xf $XGPATH_SOURCE/$N-$V.tar.bz2
+	tar xf $XGPATH_SOURCE/$N-$V.tar
 
 	#no patch
 }
