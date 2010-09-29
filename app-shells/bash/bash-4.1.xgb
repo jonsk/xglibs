@@ -15,7 +15,7 @@ HOMEPAGE="http://tiswww.case.edu/php/chet/bash/bashtop.html"
 
 SRC_URI="http://ftp.gnu.org/gnu/bash/$N-$V$R.tar.gz"
 SRC_PATCH="http://ftp.gnu.org/gnu/bash/bash-4.1-patches"
-MAX_PATCH=5
+MAX_PATCH=7
 
 
 # Binary package URI.
@@ -80,8 +80,7 @@ xgb_build()
 {
 	#run make in current directory
 	make
-	chown -Rv nobody .
-	su-tools nobody -s /bin/bash -c "make tests"
+	make tests
 
 }
 

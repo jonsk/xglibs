@@ -53,7 +53,9 @@ xgb_config()
 	#run configure
 	XGB_CONFIG+=" --enable-thread-safe --prefix=/usr --docdir=/usr/share/doc/mpfr-3.0.0"
 
-	./configure $XGB_CONFIG
+	CC="gcc -Xassembler -mfix-loongson2f-nop -isystem /usr/include " \
+	CXX="gcc -Xassembler -mfix-loongson2f-nop -isystem /usr/include " \
+	LDFLAGS="-Wl,-rpath-link,/lib" ./configure $XGB_CONFIG
 }
 
 #build

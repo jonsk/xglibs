@@ -6,7 +6,7 @@
 DESCRIPTION="library for multiple-precision floating-point computations with exact rounding"
 
 # Homepage, not used by Portage directly but handy for developer reference
-HOMEPAGE="http://www.mpfr.org"
+HOMEPAGE="http://www.multiprecision.org/mpc/"
 
 # Point to any required sources; these will be automatically downloaded by
 # gpkg. 
@@ -14,7 +14,7 @@ HOMEPAGE="http://www.mpfr.org"
 # $V = package version, such as 2.6.10
 
 #SRC_URI="http://foo.bar.com/$N-$V.tar.gz"
-SRC_URI="http://www.mpfr.org/$N-$V$R/$N-$V$R.tar.gz"
+SRC_URI="http://www.multiprecision.org/mpc/download/mpc-0.8.2.tar.gz"
 
 
 # Binary package URI.
@@ -53,6 +53,9 @@ xgb_config()
 	#run configure
 	XGB_CONFIG+=" --prefix=/usr "
 
+	CC="gcc -Xassembler -mfix-loongson2f-nop -isystem /usr/include " \
+	CXX="gcc -Xassembler -mfix-loongson2f-nop -isystem /usr/include " \
+	LDFLAGS="-Wl,-rpath-link,/lib" \
 	./configure $XGB_CONFIG
 }
 

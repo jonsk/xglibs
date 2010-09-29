@@ -14,7 +14,8 @@ HOMEPAGE="http://www.gnu.org/software/tar/"
 # $V = package version, such as 2.6.10
 
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="http://ftp.gnu.org/gnu/tar/$N-$V$R.tar.bz2"
+SRC_URI="http://ftp.gnu.org/gnu/tar/$N-$V$R.tar.bz2 \
+	http://patches.cross-lfs.org/dev/tar-1.23-man-1.patch"
 
 
 # Binary package URI.
@@ -39,10 +40,7 @@ xgb_unpack()
 
 	#fist, cd build directory
 	cd $N-$V$R
-
-	#fix a bug that was inserted into the latest code release
-	sed -i /SIGPIPE/d src/tar.c
-	err_check "patch $N failed."
+	patch -Np1 -i $XGPATH_SOURCE/tar-1.23-man-1.patch
 }
 
 #config

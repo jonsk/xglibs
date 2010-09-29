@@ -38,10 +38,6 @@ xgb_unpack()
 
 	#fist, cd build directory
 	cd $N-$V$R
-
-	#all program was installed earlier by Util-linux-ng
-#	sed -i -e 's/utmpdump wall/utmpdump/' \
-#	       -e 's/mountpoint.1 wall.1/mountpoint.1/' src/Makefile
 	err_check "patch $N failed."
 }
 
@@ -72,5 +68,6 @@ xgb_install()
 
 	#install everything to $XGPATH_DEST
 	make -C src ROOT=$XGPATH_DEST install
+
 }
 

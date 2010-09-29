@@ -14,7 +14,8 @@ HOMEPAGE="http://www.gnu.org/software/ncurses/"
 # $V = package version, such as 2.6.10
 
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="http://ftp.gnu.org/pub/gnu/ncurses/$N-$V$R.tar.gz"
+SRC_URI="http://ftp.gnu.org/pub/gnu/ncurses/$N-$V$R.tar.gz \
+	http://patches.cross-lfs.org/dev/ncurses-5.7-branch_update-21.patch"
 
 
 # Binary package URI.
@@ -32,15 +33,15 @@ xgb_unpack()
 {
 	#unpard file from $XGPATH_SOURCE to current directory.
 	echo "Unpacking ..."
-#	tar xf $XGPATH_SOURCE/$N-$V$R.tar.gz
+	tar xf $XGPATH_SOURCE/$N-$V$R.tar.gz
 }
 
 #config
 xgb_config()
 {
 	#fist, cd build directory
-#	cd $N-$V$R
-	cd /tmp/ncurses-5.7/
+	cd $N-$V$R
+	patch -Np1 -i $XGPATH_SOURCE/ncurses-5.7-branch_update-21.patch
 
 	#second, add package specified config params to XGB_CONFIG
 	XGB_CONFIG+="--prefix=/usr --with-shared --without-debug --enable-widec"
@@ -63,30 +64,34 @@ xgb_install()
 	make DESTDIR=$XGPATH_DEST install
 
 	#Correct the permissions, should not be executable:
-	chmod -v 644 $XGPATH_DEST/usr/lib/libncurses++w.a
-	mkdir -v $XGPATH_DEST/lib
-	mv -v $XGPATH_DEST/usr/lib/libncursesw.so.5* $XGPATH_DEST/lib
-	ln -sfv ../../lib/libncursesw.so.5 $XGPATH_DEST/usr/lib/libncursesw.so
+#	mv -v $XGPATH_DEST/lib/lib{panelw,menuw,formw,ncursesw,ncurses++w}.a $XGPATH_DEST/usr/lib
+#	rm -v $XGPATH_DEST/lib/lib{ncursesw,menuw,panelw,formw}.so
+	ln -sv libncursesw.so.5 $XGPATH_DEST/usr/lib/libncursesw.so
+	ln -sv libmenuw.so.5 $XGPATH_DEST/usr/lib/libmenuw.so
+	ln -sv libpanelw.so.5 $XGPATH_DEST/usr/lib/libpanelw.so
+	ln -sv libformw.so.5 $XGPATH_DEST/usr/lib/libformw.so
 
-	for lib in curses ncurses form panel menu
-	do
-		rm -vf $XGPATH_DEST/usr/lib/lib${lib}.so
-		echo "INPUT(-l${lib}w)" > $XGPATH_DEST/usr/lib/lib${lib}.so
-		ln -sfv lib${lib}w.a $XGPATH_DEST/usr/lib/lib${lib}.a
+	for lib in curses ncurses form panel menu ; do 
+	        echo "INPUT(-l${lib}w)" > $XGPATH_DEST/usr/lib/lib${lib}.so
+	        ln -sfv lib${lib}w.a $XGPATH_DEST/usr/lib/lib${lib}.a
 	done
-
-	ln -sfv libncurses++w.a $XGPATH_DEST/usr/lib/libncurses++.a
-
-	#Finally, make sure look for - lcurses  are still buildable:
-	rm -vf $XGPATH_DEST/usr/lib/libcursesw.so
-	echo "INPUT(-lncursesw)" > $XGPATH_DEST/usr/lib/libcursesw.so
-	ln -sfv libncurses.so $XGPATH_DEST/usr/lib/libcurses.so
+	ln -sfv libncursesw.so $XGPATH_DEST/usr/lib/libcursesw.so
 	ln -sfv libncursesw.a $XGPATH_DEST/usr/lib/libcursesw.a
-	ln -sfv libncurses.a $XGPATH_DEST/usr/lib/libcurses.a
+	ln -sfv libncurses++w.a $XGPATH_DEST/usr/lib/libncurses++.a
+	ln -sfv ncursesw5-config $XGPATH_DEST/usr/bin/ncurses5-config
 
 	#docs
-#	mkdir -p $XGPATH_DEST/usr/share/doc/$N-$V$R
-#	cp -v -R doc/* $XGPATH_DEST/usr/share/doc/$PackageName
+	rm -rf $XGPATH_DEST/usr/share/doc/hackguide.doc
+	rm -rf $XGPATH_DEST/usr/share/doc/html/
+	rm -rf $XGPATH_DEST/usr/share/doc/ncurses-intro.doc
+	rm -rf $XGPATH_DEST/usr/man/man?
+
+	#create non-wide-character Ncurses libraries
+	#make distclean
+	#./configure --prefix=/usr --with-shared --without-normal \
+	#--without-debug --without-cxx-binding
+	#make DESTDIR=$XGPATH_DEST sources libs
+	#cp -av $XGPATH_DEST/lib/lib*.so.5* $XGPATH_DEST/usr/lib
 }
 
 

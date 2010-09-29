@@ -17,7 +17,8 @@ HOMEPAGE="http://sites.inka.de/lina/linux/NetTools/"
 SRC_URI="http://www.tazenda.demon.co.uk/phil/net-tools/$N-$V.tar.bz2 \
 http://www.linuxfromscratch.org/patches/blfs/svn/net-tools-1.60-gcc34-3.patch \
 http://www.linuxfromscratch.org/patches/blfs/svn/net-tools-1.60-kernel_headers-2.patch \
-http://www.linuxfromscratch.org/patches/blfs/svn/net-tools-1.60-mii_ioctl-1.patch"
+http://www.linuxfromscratch.org/patches/blfs/svn/net-tools-1.60-mii_ioctl-1.patch \
+http://svn.cross-lfs.org/svn/repos/patches/net-tools/net-tools-1.60-supress_hostname-1.patch "
 
 
 # Binary package URI.
@@ -42,7 +43,8 @@ xgb_unpack()
 	cd $N-$V$R
         patch -Np1 -i $XGPATH_SOURCE/net-tools-1.60-gcc34-3.patch &&
 	patch -Np1 -i $XGPATH_SOURCE/net-tools-1.60-kernel_headers-2.patch &&
-	patch -Np1 -i $XGPATH_SOURCE/net-tools-1.60-mii_ioctl-1.patch
+	patch -Np1 -i $XGPATH_SOURCE/net-tools-1.60-mii_ioctl-1.patch &&
+	patch -Np1 -i $XGPATH_SOURCE/net-tools-1.60-supress_hostname-1.patch
 }
 
 #config
@@ -68,7 +70,7 @@ xgb_build()
         echo "make $N-$V$R..."
 
 	#run make in current directory
-	make
+	make 
 }
 
 #install
@@ -79,7 +81,7 @@ xgb_install()
  	#install everything to $XGPATH_DEST
 	mkdir -p BASEDIR/sbin
 	mkdir -p BASEDIR/bin
-	make BASEDIR=$XGPATH_DEST install
+	make BASEDIR=$XGPATH_DEST update
 }
 
 

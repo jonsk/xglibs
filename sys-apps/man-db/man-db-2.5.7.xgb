@@ -13,7 +13,8 @@ HOMEPAGE="http://savannah.nongnu.org/projects/man-db"
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
 
-SRC_URI="http://ftp.twaren.net/Unix/NonGNU/man-db/$N-$V$R.tar.gz"
+SRC_URI="http://ftp.twaren.net/Unix/NonGNU/man-db/$N-$V$R.tar.gz \
+	http://www.linuxfromscratch.org/patches/lfs/development/man-db-2.5.7-fix_man_assertion-1.patch"
 
 
 # Binary package URI.
@@ -43,6 +44,7 @@ xgb_config()
 
 	#fist, cd build directory
 	cd $N-$V$R
+	patch -Np1 -i $XGPATH_SOURCE/man-db-2.5.7-fix_man_assertion-1.patch
 
 	#second, add package specified config params to XGB_CONFIG
 	XGB_CONFIG+=" --libexecdir=/usr/lib \

@@ -79,9 +79,10 @@ xgb_install()
 
 	#copy certs.
 	cp -v -r certs /etc/ssl
-
+	rm -rf $XGPATH_DEST//usr/share/man/*
 	install -v -d -m755 $XGPATH_DEST/usr/share/doc/$N-$V
         cp -v -r doc/{HOWTO,README,*.{txt,html,gif}} \
 		$XGPATH_DEST/usr/share/doc/$N-$V
+	rm -rf $XGPATH_DEST/usr/share/doc/$N-$V
 }
 

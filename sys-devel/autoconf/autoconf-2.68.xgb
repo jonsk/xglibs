@@ -3,18 +3,17 @@
 # Xiange Linux build scripts
 
 # Short one-line description of this package.
-DESCRIPTION="Standard (de)compression library"
+DESCRIPTION="Used to create autoconfiguration files"
 
 # Homepage, not used by Portage directly but handy for developer reference
-HOMEPAGE="http://www.zlib.net/"
+HOMEPAGE="http://www.gnu.org/software/autoconf/autoconf.html"
 
 # Point to any required sources; these will be automatically downloaded by
 # gpkg. 
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
 
-#SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="http://zlib.net/$N-$V$R.tar.bz2"
+SRC_URI="http://ftp.gnu.org/gnu/autoconf/$N-$V$R.tar.bz2"
 
 
 # Binary package URI.
@@ -22,7 +21,7 @@ BIN_URI=""
 
 
 # Runtime Depend
-RDEPEND=""
+RDEPEND="m4"
 
 # Build time depend
 DEPEND="${RDEPEND}"
@@ -43,10 +42,10 @@ xgb_config()
 	cd $N-$V$R
 
 	#second, add package specified config params to XGB_CONFIG
-	XGB_CONFIG+=" --prefix=/usr"
+	XGB_CONFIG+=" --prefix=/usr "
 
 	#Third, call configure with $XGB_CONFIG
-	LDFLAGS="-Wl,-rpath-link,/lib" ./configure $XGB_CONFIG
+	./configure $XGB_CONFIG
 }
 
 #build
@@ -54,7 +53,12 @@ xgb_build()
 {
 	#run make in current directory
 	make
-	make check
+}
+
+xgb_check()
+{
+	#run check
+	make check VERBOSE=yes
 }
 
 #install
@@ -62,15 +66,6 @@ xgb_install()
 {
 	#install everything to $XGPATH_DEST
 	make DESTDIR=$XGPATH_DEST install
-	err_check "install $N failed."
-
-	#for FHS compliant
-	mkdir -p $XGPATH_DEST/lib
-	mv -v $XGPATH_DEST/usr/lib/libz.so.* $XGPATH_DEST/lib
-	err_check "install $N failed."
-
-	ln -sfv ../../lib/libz.so.$V $XGPATH_DEST/usr/lib/libz.so
-	err_check "install $N failed."
 }
 
 

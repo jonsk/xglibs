@@ -40,7 +40,7 @@ xgb_config()
 {
 	#fist, cd build directory
 	cd $N-$V$R
-	sed -i -e '/"m4.h"/a\
+	sed -i '/"m4.h"/i\#include <sys/stat.h>' src/path.c
 	#include <sys/stat.h>' src/path.c
 
 	#second, add package specified config params to XGB_CONFIG

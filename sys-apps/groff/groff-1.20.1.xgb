@@ -66,7 +66,6 @@ xgb_install()
 
 	#install everything to $XGPATH_DEST
 	make DESTDIR=$XGPATH_DEST docdir=/usr/share/doc/$N-$V$R install
-	rm docdir=/usr/share/doc/$N-$V$R -rf
 	err_check "install $N failed."
 
 	#Some documentation programs, such as xman, will not work 
@@ -74,6 +73,7 @@ xgb_install()
 	ln -sv eqn $XGPATH_DEST/usr/bin/geqn
 	ln -sv tbl $XGPATH_DEST/usr/bin/gtbl
 	ln -sv soelim $XGPATH_DEST/usr/bin/zsoelim
+	rm -rf $XGPATH_DEST/usr/share/doc/$N-$V$R
 	err_check "install $N failed."
 }
 

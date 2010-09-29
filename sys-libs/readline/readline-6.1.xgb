@@ -16,7 +16,7 @@ HOMEPAGE="http://tiswww.case.edu/php/chet/readline/rltop.html"
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
 SRC_URI="ftp://ftp.gnu.org/gnu/readline/$N-$V$R.tar.gz \
 ftp://ftp.gnu.org/gnu/readline/readline-6.1-patches/readline61-001 \
-ftp://ftp.gnu.org/gnu/readline/readline-6.1-patches/readline61-002"
+ftp://ftp.gnu.org/gnu/readline/readline-6.1-patches/readline61-002 "
 
 
 # Binary package URI.
@@ -61,7 +61,7 @@ xgb_unpack()
 xgb_config()
 {
 	#second, add package specified config params to XGB_CONFIG
-	XGB_CONFIG+=" --libdir=/lib "
+	XGB_CONFIG+=" --prefix=/usr --libdir=/lib "
 
 	#Third, call configure with $XGB_CONFIG
 	./configure $XGB_CONFIG
@@ -94,9 +94,9 @@ xgb_install()
 	err_check "ln libreadline.so failed."
 
 	#docs
-	mkdir -p $XGPATH_DEST/usr/share/doc/$N-$V$R
-	install -v -m644 doc/*.{ps,pdf,html,dvi} \
-	                 $XGPATH_DEST/usr/share/doc/$N-$V$R
+#	mkdir -p $XGPATH_DEST/usr/share/doc/$N-$V$R
+#	install -v -m644 doc/*.{ps,pdf,html,dvi} \
+#	                 $XGPATH_DEST/usr/share/doc/$N-$V$R
 	err_check "ln libreadline.so failed."
 }
 

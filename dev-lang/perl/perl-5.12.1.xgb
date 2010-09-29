@@ -35,36 +35,38 @@ xgb_unpack()
 {
 	#unpard file from $XGPATH_SOURCE to current directory.
 	echo "Unpacking ..."
-#	tar xf $XGPATH_SOURCE/$N-$V$R.tar.bz2
+	tar xf $XGPATH_SOURCE/$N-$V$R.tar.bz2
 }
 
 #config
 xgb_config()
 {
 	#fist, cd build directory
-#	cd $N-$V$R
-	cd /tmp/perl-5.12.1/
+	cd $N-$V$R
 
 	#This version of Perl now builds the Compress::Raw::Zlib module. 
 	#By default Perl will use an internal copy of the Zlib source 
 	#for the build. Issue the following command so that Perl 
 	#will use the Zlib library installed on the system: 
-	sed -i -e "s|BUILD_ZLIB\s*= True|BUILD_ZLIB = False|" 		\
-	       -e "s|INCLUDE\s*= ./zlib-src|INCLUDE    = /usr/include|" \
-	       -e "s|LIB\s*= ./zlib-src|LIB        = /usr/lib|"         \
-       		cpan/Compress-Raw-Zlib/config.in
+	sed -i -e '/^BUILD_ZLIB/s/True/False/' \
+	-e '/^INCLUDE/s,\./zlib-src,/usr/include,' \
+	-e '/^LIB/s,\./zlib-src,/usr/lib,' \
+	cpan/Compress-Raw-Zlib/config.in
+
+	ip link set lo up
+	hostname NAS
+	echo "127.0.0.1 localhost $(hostname)" > /etc/hosts
 
 	#second, add package specified config params to XGB_CONFIG
-	XGB_CONFIG="-des -Dprefix=/usr 	      \
-		-Dvendorprefix=/usr           \
-		-Dman1dir=/usr/share/man/man33 \
-		-Dman3dir=/usr/share/man/man33 "
-
+	XGB_CONFIG="--prefix=/usr \
+	-Dvendorprefix=/usr \
+	-Dman1dir=/usr/share/man/man1 \
+	-Dman3dir=/usr/share/man/man43 \
+	-Dusethreads -Duseshrplib "
+	
 	#Third, call configure with $XGB_CONFIG
-	sh Configure $XGB_CONFIG -Dpager="/usr/bin/less -isR"
+	  ./configure.gnu $XGB_CONFIG  -Dpager="/usr/bin/less -isR"
 	err_check "config $N failed."
-
-	XGB_CONFIG+=" -Dpager=\"/usr/bin/less -isR\""
 }
 
 #build
@@ -72,7 +74,7 @@ xgb_build()
 {
 	#run make in current directory
 	make
-#	make test
+	make test
 }
 
 #install
@@ -80,7 +82,5 @@ xgb_install()
 {
 	#install everything to $XGPATH_DEST
 	make DESTDIR=$XGPATH_DEST install
-	rm $XGPATH_DEST/usr/share/man/man33 -rf
+	rm $XGPATH_DEST/usr/share/man/man43 -rf
 }
-
-

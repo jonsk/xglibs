@@ -42,12 +42,11 @@ xgb_config()
 
 	#fist, cd build directory
 	cd $N-$V$R
-#	sed -i "s/\(make\)\( all\)/\1 DOCBOOKTOMAN=true\2/" tests/runtests &&
-#	./tests/runtestS
+	sed -i "s/\(make\)\( all\)/\1 DOCBOOKTOMAN=true\2/" tests/runtests &&
+	./tests/runtests
 
 	#second, add package specified config params to XGB_CONFIG
 	XGB_CONFIG="--prefix=/usr --bindir=/bin --sbindir=/sbin --enable-zlib-dynamic " 
-	#XGB_CONFIG="--prefix=/usr --bindir=/bin --sbindir=/sbin --enable-zlib-dynamic --mandir=/usr/share/man" 
 
 	#Third, call configure with $XGB_CONFIG
 	./configure $XGB_CONFIG

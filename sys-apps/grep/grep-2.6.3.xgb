@@ -13,7 +13,8 @@ HOMEPAGE="http://www.gnu.org/software/grep/"
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
 
-SRC_URI="ftp://ftp.gnu.org/gnu/grep/$N-$V$R.tar.gz"
+SRC_URI="ftp://ftp.gnu.org/gnu/grep/$N-$V$R.tar.gz \
+	http://patches.cross-lfs.org/dev/grep-2.6.3-fixes-1.patch "
 
 
 # Binary package URI.
@@ -44,7 +45,7 @@ xgb_config()
 	patch -Np1 -i $XGPATH_SOURCE/grep-2.6.3-fixes-1.patch
 
 	#second, add package specified config params to XGB_CONFIG
-	XGB_CONFIG+=" --bindir=/bin --prefix=/usr "
+	XGB_CONFIG+=" --bindir=/bin --prefix=/usr --without-included-regex "
 
 	#Third, call configure with $XGB_CONFIG
 	./configure $XGB_CONFIG

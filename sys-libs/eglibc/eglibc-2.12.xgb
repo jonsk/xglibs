@@ -13,8 +13,8 @@ HOMEPAGE="designed to work well on embedded systems"
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
 
-eglibcname="eglibc-2.12-20100729-r11028.tar.bz2"
-eglibcpatch="eglibc-ports-2.12-20100729-r11028.tar.bz2"
+eglibcname="eglibc-2.12-20100918-r11306.tar.bz2"
+eglibcpatch="eglibc-ports-2.12-20100918-r11306.tar.bz2"
 
 SRC_URI="http://xiangelinux.googlecode.com/files/$eglibcname \
 	http://xiangelinux.googlecode.com/files/$eglibcpatch \
@@ -37,51 +37,51 @@ DEPEND="${RDEPEND}"
 xgb_unpack()
 {
 	#unpard file from $XGPATH_SOURCE to current directory.
-#	echo "Unpacking ..."
-#	tar xf $XGPATH_SOURCE/$(basename $eglibcname)
-#	err_check "uncompress $N-$V failed."
+	echo "Unpacking ..."
+	tar xf $XGPATH_SOURCE/$(basename $eglibcname)
+	err_check "uncompress $N-$V failed."
 
 	#cd build directory.
-	cd /tmp/eglibc-build-bash/eglibc-build/
+	cd $N-$V$R
 	err_check "enter $N-$V failed."
 
-#	patch -Np1 -i $XGPATH_SOURCE/eglibc-2.12-20100725-r11059-make382-1.patch
-#	err_check "patch $N-$V failed."
+	patch -Np1 -i $XGPATH_SOURCE/eglibc-2.12-20100725-r11059-make382-1.patch
+	err_check "patch $N-$V failed."
 
 	#
-#	LINKER=$(readelf -l $(file /tools/lib/libc-* | cut -f1 -d:) | sed -n 's@.*interpret.*/tools\(.*\)]$@\1@p')
-#
-#	sed -i "s|libs -o|libs -L/usr/lib -Wl,-dynamic-linker=${LINKER} -o|" \
-#  		scripts/test-installation.pl
-#	err_check "patch $N-$V failed."
-#	unset LINKER
+	LINKER=$(readelf -l $(file /tools/lib/libc-* | cut -f1 -d:) | sed -n 's@.*interpret.*/tools\(.*\)]$@\1@p')
+
+	sed -i "s|libs -o|libs -L/usr/lib -Wl,-dynamic-linker=${LINKER} -o|" \
+		scripts/test-installation.pl
+	err_check "patch $N-$V failed."
+	unset LINKER
 
 	#patch  ports.
-#	echo "Patch $N-$V..."
-#	tar xpf $XGPATH_SOURCE/$(basename $eglibcpatch)
-#	err_check "uncompress port of $N-$V failed."
+	echo "Patch $N-$V..."
+	tar xpf $XGPATH_SOURCE/$(basename $eglibcpatch)
+	err_check "uncompress port of $N-$V failed."
 
-#	cp config.make.in{,.orig}
-#	sed '/ldd-rewrite-script/s:@:${objdir}/&:' \
-#		config.make.in.orig > config.make.in
-#	err_check "patch $N-$V failed."
+	cp config.make.in{,.orig}
+	sed '/ldd-rewrite-script/s:@:${objdir}/&:' \
+		config.make.in.orig > config.make.in
+	err_check "patch $N-$V failed."
 
-#	mkdir -v ../eglibc-build
-#	cd ../eglibc-build
-#	err_check "cd build dir of $N-$V failed."
+	mkdir -v ../eglibc-build
+	cd ../eglibc-build
+	err_check "cd build dir of $N-$V failed."
 
-#	echo "slibdir=/lib" >> configparms
+	echo "slibdir=/lib" >> configparms
 }
 
 #config
 xgb_config()
 {
-#	#run configure
-#	XGB_CONFIG=" --prefix=/usr --disable-profile --enable-add-ons \
-#		--enable-kernel=2.6.0 --libexecdir=/usr/lib/eglibc \
-#		--libdir=/usr/lib"
-#	../$N-$V/configure $XGB_CONFIG
-	cd /tmp/eglibc-build-bash/eglibc-build/
+	#run configure
+	XGB_CONFIG=" --prefix=/usr --disable-profile --enable-add-ons \
+		--enable-kernel=2.6.0 --libexecdir=/usr/lib/eglibc \
+		--libdir=/usr/lib"
+	CC="gcc -Xassembler -mfix-loongson2f-nop" ../$N-$V/configure $XGB_CONFIG
+	cd ../eglibc-build/
         err_check "enter $N-$V failed."
 
 }
@@ -96,11 +96,10 @@ xgb_build()
 #check
 xgb_check()
 {
-#	echo "checking $N-$V$R.."
+	echo "checking $N-$V$R.."
 #	cp -v ../eglibc-2.12/iconvdata/gconv-modules iconvdata
-#	err_check "patch $N-$V failed."
+	err_check "patch $N-$V failed."
 #	make -k check
-	cd /tmp/eglibc-build-bash/eglibc-build/
 	err_check "enter $N-$V failed."
 
 }
@@ -140,10 +139,38 @@ EOF
 xgb_install()
 {
 	#install everything to $XGPATH_DEST
+	echo "Install eglibc"
 	touch  $XGPATH_DEST/etc/ld.so.conf
 	make install_root=$XGPATH_DEST install
-	cd /tmp/eglibc-build-bash/eglibc-build/
+	
+	echo "Install locales.."
+cat > ../eglibc-2.12/localedata/SUPPORTED << "EOF"
+# This file names the currently supported and somewhat tested locales.
+# If you have any additions please file a glibc bug report.
+SUPPORTED-LOCALES=\
+en_GB.UTF-8/UTF-8 \
+en_GB/ISO-8859-1 \
+en_US.UTF-8/UTF-8 \
+en_US/ISO-8859-1 \
+ja_JP.EUC-JP/EUC-JP \
+ja_JP.UTF-8/UTF-8 \
+zh_CN.GB18030/GB18030 \
+zh_CN.GBK/GBK \
+zh_CN.UTF-8/UTF-8 \
+zh_CN/GB2312 \
+zh_HK.UTF-8/UTF-8 \
+zh_HK/BIG5-HKSCS \
+zh_SG.UTF-8/UTF-8 \
+zh_SG.GBK/GBK \
+zh_SG/GB2312 \
+zh_TW.EUC-TW/EUC-TW \
+zh_TW.UTF-8/UTF-8 \
+zh_TW/BIG5 \
+EOF
+        mkdir -pv /usr/lib/locale
         make localedata/install-locales
+        mkdir -pv $XGPATH_DEST/usr/lib/locale/
+        mv /usr/lib/locale/locale-archive $XGPATH_DEST/usr/lib/locale/
 
 	err_check "[Error] install $N-$V failed."
 
@@ -192,14 +219,34 @@ xgb_install()
 #{
 #	#install locale
 #	echo "Install locales.."
-#	cd /tmp/eglibc-build-bash/eglibc-build/
-#	make localedata/install-locales
+#cat > ../eglibc-2.12/localedata/SUPPORTED << "EOF"
+# This file names the currently supported and somewhat tested locales.
+# If you have any additions please file a glibc bug report.
+#SUPPORTED-LOCALES=\
+#en_GB.UTF-8/UTF-8 \
+#en_GB/ISO-8859-1 \
+#en_US.UTF-8/UTF-8 \
+#en_US/ISO-8859-1 \
+#ja_JP.EUC-JP/EUC-JP \
+#ja_JP.UTF-8/UTF-8 \
+#zh_CN.GB18030/GB18030 \
+#zh_CN.GBK/GBK \
+#zh_CN.UTF-8/UTF-8 \
+#zh_CN/GB2312 \
+#zh_HK.UTF-8/UTF-8 \
+#zh_HK/BIG5-HKSCS \
+#zh_SG.UTF-8/UTF-8 \
+#zh_SG.GBK/GBK \
+#zh_SG/GB2312 \
+#zh_TW.EUC-TW/EUC-TW \
+#zh_TW.UTF-8/UTF-8 \
+#zh_TW/BIG5 \
+#EOF
 #	mkdir -pv /usr/lib/locale
-#	localedef -i en_US -f ISO-8859-1 en_US
-#	localedef -i en_US -f UTF-8 en_US.UTF-8
-#	localedef -i zh_CN -f GB2312 zh_CN.GB2312
-#	localedef -i zh_CN -f UTF-8 zh_CN.UTF-8
+#	make localedata/install-locales
+#	mkdir -pv $XGPATH_DEST/usr/lib/locale/
+#	mv /usr/lib/locale/locale-archive $XGPATH_DEST/usr/lib/locale/
 
-#	glib_adjust_toolchain
+	#glib_adjust_toolchain
 #}
 

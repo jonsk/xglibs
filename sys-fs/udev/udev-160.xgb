@@ -14,8 +14,7 @@ HOMEPAGE="http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev.html"
 # $V = package version, such as 2.6.10
 
 SRC_URI="http://www.kernel.org/pub/linux/utils/kernel/hotplug/$N-$V$R.tar.bz2 \
-http://www.linuxfromscratch.org/lfs/downloads/development/udev-config-20100128.tar.bz2 \
-http://anduin.linuxfromscratch.org/sources/other/udev-162-testfiles.tar.bz2 "
+http://www.linuxfromscratch.org/lfs/downloads/development/udev-config-20100128.tar.bz2 "
 
 
 # Binary package URI.
@@ -44,13 +43,11 @@ xgb_config()
 	#fist, cd build directory
 	cd $N-$V$R
 	tar -xvf $XGPATH_SOURCE/udev-config-20100128.tar.bz2
-	tar -xvf $XGPATH_SOURCE/udev-162-testfiles.tar.bz2 --strip-components=1
 
 	#second, add package specified config params to XGB_CONFIG
-	XGB_CONFIG+=" --prefix=/usr \
-	--sysconfdir=/etc --sbindir=/sbin \
-	--with-rootlibdir=/lib --libexecdir=/lib/udev \
-	--disable-extras --disable-introspection"
+	XGB_CONFIG+=" --prefix=/usr  --sysconfdir=/etc --sbindir=/sbin     \
+		--with-rootlibdir=/lib --libexecdir=/lib/udev \
+		--disable-extras --disable-introspection --exec-prefix="" "
 
 	#Third, call configure with $XGB_CONFIG
 	./configure $XGB_CONFIG
@@ -63,7 +60,6 @@ xgb_build()
 
 	#run make in current directory
 	make
-#	make check
 }
 
 #install
@@ -73,9 +69,6 @@ xgb_install()
 
 	#install everything to $XGPATH_DEST
 	make DESTDIR=$XGPATH_DEST install
-	rmdir -v $XGPATH_DEST/usr/share/doc/udev
-	cd udev-config-20100128
-	make install
 	err_check "install $N failed."
 
 	#install devices

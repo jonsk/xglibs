@@ -46,7 +46,7 @@ xgb_unpack()
 
 	#The following command ensures installation of symbolic links 
 	#are relative
-	sed -i 's@\(ln -s -f \)$(PREFIX)/bin/@\1@' Makefile
+	sed -i -e 's:ln -s -f $(PREFIX)/bin/:ln -s :' Makefile
 	err_check "patch $N failed."
 }
 

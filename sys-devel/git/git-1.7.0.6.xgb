@@ -45,7 +45,7 @@ xgb_config()
 	cd $N-$V$R
 
 	#second, add package specified config params to XGB_CONFIG
-	XGB_CONFIG+=" --sysconfdir=/etc --libexecdir=/usr/lib/git "
+	XGB_CONFIG+=" --sysconfdir=/etc --libexecdir=/usr/lib/git  --prefix=/usr "
 
 	#Third, call configure with $XGB_CONFIG
 	./configure $XGB_CONFIG
@@ -73,7 +73,7 @@ xgb_install()
 xgb_postinst()
 {
 	echo "running after package installed..."
-	git config --system --add user.name xguser
-	git config --system --add user.email xguser@xiangelinux.com
+	#git config --system --add user.name xguser
+	#git config --system --add user.email xguser@xiangelinux.com
 }
 

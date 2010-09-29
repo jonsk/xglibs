@@ -16,7 +16,7 @@ HOMEPAGE="http://www.vim.org/"
 SRC_URI="ftp://ftp.vim.org/pub/vim/unix/vim-7.3.tar.bz2 "
 
 VIM_PATCH_MIN=001
-VIM_PATCH_MAX=003
+VIM_PATCH_MAX=011
 VIM_PATCH_URL="ftp://ftp.vim.org/pub/vim/patches/7.3"
 
 
@@ -57,7 +57,6 @@ xgb_unpack()
 	err_check "unpack $N failed."
 
 	#fist, cd build directory
-	tar xf $XGPATH_SOURCE/vim-7.2-lang.tar.gz
 	cd vim73
 	err_check "enter tar xf lang file."
 
@@ -82,7 +81,7 @@ xgb_config()
 
 	#second, add package specified config params to XGB_CONFIG
 	XGB_CONFIG+=" --enable-multibyte --prefix=/usr \
---enable-xim --enable-pythoninterp --enable-rubyinterp  "
+	--enable-xim --enable-pythoninterp --enable-rubyinterp  "
 
 	#Third, call configure with $XGB_CONFIG
 	./configure $XGB_CONFIG
@@ -103,7 +102,7 @@ xgb_check()
 	echo "checking $N-$V$R.."
 
 	#uncomment this may crash screen diaplay
-	#make test
+#	make test
 }
 
 #vimrc
@@ -134,7 +133,7 @@ set background=dark
 "endif
 " End /etc/vimrc
 EOF
-
+	vim -c ':options'
 }
 
 #install
@@ -152,7 +151,7 @@ xgb_install()
 	err_check "install $N failed."
 
 
-	mkdir $XGPATH_DEST/usr/share/doc
+	mkdir -pv $XGPATH_DEST/usr/share/doc
 	ln -sv ../vim/vim72/doc $XGPATH_DEST/usr/share/doc/vim-7.2
 	err_check "install $N failed."
 

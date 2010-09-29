@@ -50,11 +50,10 @@ xgb_config()
 
 	#second, add package specified config params to XGB_CONFIG
 	XGB_CONFIG+=" --prefix=/usr --with-root-prefix=""  --enable-elf-shlibs \
-		--disable-libblkid --disable-libuuid --disable-uuidd --disable-fsck \
-		--enable-elf-shlibs "
+		--disable-libblkid --disable-libuuid --disable-uuidd --disable-fsck "
 
 	#Third, call configure with $XGB_CONFIG
-	../configure $XGB_CONFIG
+	PKG_CONFIG=true ../configure $XGB_CONFIG
 }
 
 #build

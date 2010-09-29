@@ -3,18 +3,17 @@
 # Xiange Linux build scripts
 
 # Short one-line description of this package.
-DESCRIPTION="Standard (de)compression library"
+DESCRIPTION="System Utilities Based on Sysfs"
 
 # Homepage, not used by Portage directly but handy for developer reference
-HOMEPAGE="http://www.zlib.net/"
+HOMEPAGE="http://linux-diag.sourceforge.net/Sysfsutils.html"
 
 # Point to any required sources; these will be automatically downloaded by
 # gpkg. 
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
 
-#SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="http://zlib.net/$N-$V$R.tar.bz2"
+SRC_URI="http://downloads.sourceforge.net/linux-diag/sysfsutils-2.1.0.tar.gz"
 
 
 # Binary package URI.
@@ -32,45 +31,40 @@ DEPEND="${RDEPEND}"
 xgb_unpack()
 {
 	#unpard file from $XGPATH_SOURCE to current directory.
-	echo "Unpacking ..."
-	tar xf $XGPATH_SOURCE/$N-$V$R.tar.bz2
+	echo "Unpacking to `pwd`"
+	tar xf $XGPATH_SOURCE/$N-$V$R.tar.gz
 }
 
 #config
 xgb_config()
 {
+	echo "config $N-$V$R..."
+
 	#fist, cd build directory
 	cd $N-$V$R
 
 	#second, add package specified config params to XGB_CONFIG
-	XGB_CONFIG+=" --prefix=/usr"
+	XGB_CONFIG+=" --prefix=/usr --libdir=/usr/lib32  "
 
 	#Third, call configure with $XGB_CONFIG
-	LDFLAGS="-Wl,-rpath-link,/lib" ./configure $XGB_CONFIG
+	./configure $XGB_CONFIG
 }
 
 #build
 xgb_build()
 {
+	echo "make $N-$V$R..."
+
 	#run make in current directory
 	make
-	make check
 }
 
 #install
 xgb_install()
 {
+	echo "install to $XGPATH_DEST"
+
 	#install everything to $XGPATH_DEST
 	make DESTDIR=$XGPATH_DEST install
-	err_check "install $N failed."
-
-	#for FHS compliant
-	mkdir -p $XGPATH_DEST/lib
-	mv -v $XGPATH_DEST/usr/lib/libz.so.* $XGPATH_DEST/lib
-	err_check "install $N failed."
-
-	ln -sfv ../../lib/libz.so.$V $XGPATH_DEST/usr/lib/libz.so
-	err_check "install $N failed."
 }
-
 

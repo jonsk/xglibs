@@ -52,7 +52,9 @@ xgb_config()
 #	ABI=n32 CPPFLAGS=-fexceptions \
 #	CC="gcc -isystem /usr/include" CXX="g++ -isystem /usr/include" \
 #	LDFLAGS="-Wl,-rpath-link,/lib32" ./configure $XGB_CONFIG
-	ABI=n32 ./configure $XGB_CONFIG
+	ABI=n32 CC="gcc -Xassembler -mfix-loongson2f-nop -isystem /usr/include" \
+	 CXX="g++ -isystem /usr/include  -Xassembler -mfix-loongson2f-nop " \
+	LDFLAGS="-Wl,-rpath-link,/lib32"  ./configure $XGB_CONFIG
 }
 
 #build

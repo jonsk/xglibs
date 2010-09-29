@@ -65,10 +65,13 @@ xgb_install()
 
 	#create syslog.conf
 	mkdir $XGPATH_DEST/etc/
+	install -dv $XGPATH_DEST/etc/rsyslog.d
 	cat > $XGPATH_DEST/etc/rsyslog.conf << "EOF"
 # Begin /etc/rsyslog.conf
 
-# CLFS configuration of rsyslog. For more info use man rsyslog.conf
+#rsyslog配置文件
+#说明:此文件为弦歌Linux专用，修改至CLFS脚本，如有问题请联系josnk.echo@gmail.com或swordhui@hotmail.com
+# 备注:控制系统后的配置
 
 #######################################################################
 # Rsyslog Modules
@@ -80,6 +83,7 @@ $ModLoad imuxsock.so
 $ModLoad imklog.so
 
 #######################################################################
+
 # Global Options
 
 # Use traditional timestamp format.

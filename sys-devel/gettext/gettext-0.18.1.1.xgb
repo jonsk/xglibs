@@ -13,8 +13,7 @@ HOMEPAGE="http://www.gnu.org/software/gettext/gettext.html"
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
 
-SRC_URI="http://ftp.gnu.org/pub/gnu/gettext/$N-$V$R.tar.gz \
-http://www.linuxfromscratch.org/patches/lfs/6.5/gettext-0.17-upstream_fixes-2.patch"
+SRC_URI="http://ftp.gnu.org/pub/gnu/gettext/$N-$V$R.tar.gz "
 
 
 # Binary package URI.
@@ -40,7 +39,6 @@ xgb_unpack()
 	cd $N-$V$R
 	
 	#patch it.
-#	patch -p1 -i $XGPATH_SOURCE/gettext-0.17-upstream_fixes-2.patch
 	err_check "patch $N failed."
 }
 

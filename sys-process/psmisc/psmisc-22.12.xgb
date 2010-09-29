@@ -69,10 +69,6 @@ xgb_install()
 	err_check "install $N failed."
 
 	#adjust.
-#	mkdir -p $XGPATH_DEST/bin
-#	mv $XGPATH_DEST/usr/bin/killall $XGPATH_DEST/bin
-	err_check "install $N failed."
-
 	ln -sv killall $XGPATH_DEST/bin/pidof
 	err_check "install $N failed."
 }

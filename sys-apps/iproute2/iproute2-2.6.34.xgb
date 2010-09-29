@@ -14,7 +14,7 @@ HOMEPAGE="http://www.linuxfoundation.org/collaborate/workgroups/networking/iprou
 # $V = package version, such as 2.6.10
 
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-#SRC_URI="http://devresources.linuxfoundation.org/dev/$N/download/$N-$V$R.tar.bz2"
+SRC_URI="http://devresources.linuxfoundation.org/dev/$N/download/$N-$V$R.tar.bz2"
 
 
 # Binary package URI.
@@ -42,6 +42,8 @@ xgb_config()
 
 	#fist, cd build directory
 	cd $N-$V$R
+	sed -i '/^TARGETS/s@arpd@@g' misc/Makefile
+
 }
 
 #build
@@ -50,7 +52,6 @@ xgb_build()
 	echo "make $N-$V$R..."
 
 	#run make in current directory
-	make DESTDIR= 
 }
 
 #install
@@ -60,6 +61,7 @@ xgb_install()
 
 	#install everything to $XGPATH_DEST
 	make DESTDIR=$XGPATH_DEST SBINDIR=/sbin MANDIR=/usr/share/man \
-		DOCDIR=/usr/share/doc/$N-$V$R install
+	DOCDIR=/usr/share/doc/$N-$V$R install
+	rm -rf /usr/share/doc/$N-$V$R 
 }
 

@@ -14,7 +14,7 @@ HOMEPAGE="http://git.kernel.org/?p=utils/util-linux-ng/util-linux-ng.git"
 # $V = package version, such as 2.6.10
 
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="http://www.kernel.org/pub/linux/utils/util-linux-ng/v2.17/$N-$V$R.tar.bz2"
+SRC_URI="ftp://ftp.kernel.org/pub/linux/utils/util-linux-ng/v2.18/util-linux-ng-2.18.tar.bz2"
 
 
 # Binary package URI.
@@ -34,27 +34,26 @@ xgb_unpack()
 {
 	#unpard file from $XGPATH_SOURCE to current directory.
 	echo "Unpacking ..."
-#	tar xf $XGPATH_SOURCE/$N-$V$R.tar.bz2
+	tar xf $XGPATH_SOURCE/$N-$V$R.tar.bz2
 }
 
 #config
 xgb_config()
 {
 	#fist, cd build directory
-#	cd $N-$V$R
-	cd /tmp/util-linux-ng-2.18/
-#	sed -e 's@etc/adjtime@var/lib/hwclock/adjtime@g' \
-#	-i $(grep -rl '/etc/adjtime' .)
-#	mkdir -pv /var/lib/hwclock
+	cd $N-$V$R
+	sed -i 's@etc/adjtime@var/lib/hwclock/adjtime@g' \
+	hwclock/hwclock.c
+	mkdir -pv /var/lib/hwclock
 
 	#second, add package specified config params to XGB_CONFIG
 	#fallocate will cause compile error.
-#	XGB_CONFIG+=" --enable-arch --enable-partx --enable-write --disable-wall "
+	XGB_CONFIG+=" --enable-arch --enable-partx --enable-write --disable-wall "
 		
 
 
 	#Third, call configure with $XGB_CONFIG
-#	./configure $XGB_CONFIG
+	./configure $XGB_CONFIG
 }
 
 #build
@@ -70,6 +69,8 @@ xgb_install()
 	#install everything to $XGPATH_DEST
 	make DESTDIR=$XGPATH_DEST install
 	mkdir -pv $XGPATH_DEST/var/lib/hwclock
+	mkdir $XGPATH_DEST/bin
+	mv -v $XGPATH_DEST/usr/bin/logger $XGPATH_DEST/bin
 }
 
 

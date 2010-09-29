@@ -14,7 +14,8 @@ HOMEPAGE="http://www.gnu.org/software/texinfo/"
 # $V = package version, such as 2.6.10
 
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="http://ftp.gnu.org/gnu/texinfo/$N-4.13a.tar.gz"
+SRC_URI="http://ftp.gnu.org/gnu/texinfo/$N-4.13a.tar.gz
+	http://patches.cross-lfs.org/dev/texinfo-4.13a-new_compressors-1.patch"
 
 
 # Binary package URI.
@@ -43,6 +44,7 @@ xgb_config()
 
 	#fist, cd build directory
 	cd $N-$V$R
+	patch -Np1 -i $XGPATH_SOURCE/texinfo-4.13a-new_compressors-1.patch
 
 	#second, add package specified config params to XGB_CONFIG
 	#XGB_CONFIG+=" --foo --bar "

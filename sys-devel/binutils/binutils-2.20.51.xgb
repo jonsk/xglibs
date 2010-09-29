@@ -13,7 +13,7 @@ HOMEPAGE="http://www.gnu.org/software/binutils/"
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
 
-SRC_URI="http://ftp.gnu.org/gnu/binutils/$N-$V$R.tar.bz2"
+SRC_URI="http://xiangelinux.googlecode.com/files/binutils-2.20.51.tar.bz2"
 
 
 # Binary package URI.
@@ -40,24 +40,24 @@ xgb_config()
 {
 	#cd build directory.
 	cd $N-$V$R
-	rm -fv etc/standards.info
-	sed -i.bak '/^INFO/s/standards.info //' etc/Makefile.in
+#	expect -c "spawn ls"
 	mkdir -v ../binutils-build
 	cd ../binutils-build
 	err_check "enter directory build failed"
 
 	#run configure
 	XGB_CONFIG+=" --enable-shared --prefix=/usr "
-
-	../$N-$V$R/configure $XGB_CONFIG
+	LDFLAGS="-Wl,-rpath-link,/lib"  ../$N-$V$R/configure $XGB_CONFIG
 }
 
 #build
 xgb_build()
 {
 	#run make in current directory
+	
+	make configure-host
 	make tooldir=/usr
-	make check
+	#make check -k
 }
 
 #install
