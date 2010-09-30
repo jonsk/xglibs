@@ -80,6 +80,9 @@ xgb_install()
 	echo "install to $XGPATH_DEST"
 
 	#install everything to $XGPATH_DEST
+	groupadd -g 48 sshd &&
+	useradd -c 'sshd PrivSep' -d /var/lib/sshd -g sshd -s /bin/false -u 48 sshd &&
+
 	make DESTDIR=$XGPATH_DEST install
 	err_check "install $N-$V failed"
 
@@ -90,21 +93,11 @@ xgb_install()
 	cp -ar /var/xiange/xglibs/bootscripts /tmp
 	cd /tmp/bootscripts
 	make install-sshd
-	cd /
+	cd $N-${V}p1
 	rm -rf /tmp/bootscripts
 
 	err_check "install $N-$V Server"
 
-}
-
-#post install
-xgb_postinst()
-{
-	echo "running after package installed..."
-	groupadd -g 48 sshd &&
-	useradd -c 'sshd PrivSep' -d /var/lib/sshd -g sshd -s /bin/false -u 48 sshd &&
-	
-	err_check "Create sshd:sshd failed."
 }
 
 #pre remove
