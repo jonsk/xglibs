@@ -13,6 +13,8 @@ HOMEPAGE="http://www.vim.org/"
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
 
+SCRIPT_AUTHORS="Íõ½­Î°<jonsk.echo@gmail.com>"
+
 SRC_URI="ftp://ftp.vim.org/pub/vim/unix/vim-7.3.tar.bz2 "
 
 VIM_PATCH_MIN=001

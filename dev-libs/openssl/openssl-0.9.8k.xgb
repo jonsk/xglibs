@@ -13,6 +13,8 @@ HOMEPAGE="http://www.openssl.org/"
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
 
+SCRIPT_AUTHORS="Íõ½­Î°<jonsk.echo@gmail.com>"
+
 SRC_URI="http://www.openssl.org/source/openssl-0.9.8k.tar.gz \
 	http://svn.cross-lfs.org/svn/repos/patches/openssl/openssl-0.9.8k-mips_support-1.patch \
 	http://svn.cross-lfs.org/svn/repos/patches/openssl/openssl-0.9.8k-fix_manpages-1.patch \

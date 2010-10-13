@@ -12,6 +12,8 @@ HOMEPAGE="http://gcc.gnu.org/"
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
 
+SCRIPT_AUTHORS="Íõ½­Î°<jonsk.echo@gmail.com>"
+
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
 SRC_URI="http://ftp.gnu.org/gnu/gcc/$N-$V$R/$N-$V$R.tar.bz2"
 

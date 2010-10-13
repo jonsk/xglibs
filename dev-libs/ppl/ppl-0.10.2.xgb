@@ -13,6 +13,8 @@ HOMEPAGE="http://www.cs.unipr.it/ppl"
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
 
+SCRIPT_AUTHORS="Íõ½­Î°<jonsk.echo@gmail.com>"
+
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
 SRC_URI="http://www.cs.unipr.it/ppl/Download/ftp/releases/0.10.2/ppl-0.10.2.tar.bz2"
 

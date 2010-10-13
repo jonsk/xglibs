@@ -13,6 +13,8 @@ HOMEPAGE="http://www.gnu.org/software/make/make.html"
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
 
+SCRIPT_AUTHORS="Íõ½­Î°<jonsk.echo@gmail.com>"
+
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
 SRC_URI="http://ftp.gnu.org/pub/gnu/make/$N-$V$R.tar.bz2 \
 http://www.linuxfromscratch.org/patches/lfs/6.6/make-3.81-upstream_fixes-1.patch"

@@ -11,6 +11,9 @@ HOMEPAGE="http://code.google.com/p/xiangelinux"
 # gpkg. 
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
+
+SCRIPT_AUTHORS="Íõ½­Î°<jonsk.echo@gmail.com>"
+
 SRC_URI="http://xiangelinux.googlecode.com/files/baselayout-loongson64-1.0.tar"
 
 

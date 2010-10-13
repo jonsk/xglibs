@@ -13,6 +13,8 @@ HOMEPAGE="http://flex.sourceforge.net/"
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
 
+SCRIPT_AUTHORS="Íõ½­Î°<jonsk.echo@gmail.com>"
+
 SRC_URI="http://prdownloads.sourceforge.net/flex/$N-$V$R.tar.bz2 \
 	http://patches.cross-lfs.org/dev/flex-2.5.35-gcc44-1.patch"
 

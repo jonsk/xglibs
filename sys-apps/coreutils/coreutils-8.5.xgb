@@ -13,6 +13,8 @@ HOMEPAGE="http://www.gnu.org/software/coreutils"
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
 
+SCRIPT_AUTHORS="Íõ½­Î°<jonsk.echo@gmail.com>"
+
 SRC_URI="http://ftp.gnu.org/gnu/coreutils/$N-$V$R.tar.gz \
 	http://patches.cross-lfs.org/dev/coreutils-8.5-uname-1.patch "
 

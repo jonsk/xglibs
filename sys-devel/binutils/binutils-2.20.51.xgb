@@ -13,6 +13,8 @@ HOMEPAGE="http://www.gnu.org/software/binutils/"
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
 
+SCRIPT_AUTHORS="Íõ½­Î°<jonsk.echo@gmail.com>"
+
 SRC_URI="http://xiangelinux.googlecode.com/files/binutils-2.20.51.tar.bz2"
 
 

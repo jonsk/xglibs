@@ -13,6 +13,8 @@ HOMEPAGE="http://procps.sourceforge.net/"
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
 
+SCRIPT_AUTHORS="Íõ½­Î°<jonsk.echo@gmail.com>"
+
 SRC_URI="http://procps.sourceforge.net/$N-$V$R.tar.gz \
 	http://www.linuxfromscratch.org/patches/lfs/development/procps-3.2.8-fix_HZ_errors-1.patch \
 	http://www.linuxfromscratch.org/patches/lfs/development/procps-3.2.8-watch_unicode-1.patch "

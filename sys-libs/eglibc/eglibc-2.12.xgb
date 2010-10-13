@@ -13,6 +13,8 @@ HOMEPAGE="designed to work well on embedded systems"
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
 
+SCRIPT_AUTHORS="Íõ½­Î°<jonsk.echo@gmail.com>"
+
 eglibcname="eglibc-2.12-20100918-r11306.tar.bz2"
 eglibcpatch="eglibc-ports-2.12-20100918-r11306.tar.bz2"
 

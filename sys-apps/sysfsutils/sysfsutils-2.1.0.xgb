@@ -13,6 +13,8 @@ HOMEPAGE="http://linux-diag.sourceforge.net/Sysfsutils.html"
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
 
+SCRIPT_AUTHORS="Íõ½­Î°<jonsk.echo@gmail.com>"
+
 SRC_URI="http://downloads.sourceforge.net/linux-diag/sysfsutils-2.1.0.tar.gz"
 
 

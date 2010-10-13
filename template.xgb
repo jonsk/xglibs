@@ -2,9 +2,11 @@
 #
 # Xiange Linux build scripts
 
+#简介
 # Short one-line description of this package.
 DESCRIPTION="This is a sample skeleton xiange build script file"
 
+#项目主页
 # Homepage, not used by Portage directly but handy for developer reference
 HOMEPAGE="http://foo.bar.com/"
 
@@ -13,10 +15,15 @@ HOMEPAGE="http://foo.bar.com/"
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
 
+#作者
+SCRIPT_AUTHORS=""
+
+#软件下载地址
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
 SRC_URI=""
 
 
+#二进制软件包下载地址
 # Binary package URI.
 BIN_URI=""
 
@@ -35,6 +42,7 @@ xgb_init()
 	echo "init $N-$V$R build script..."
 }
 
+#解压函数
 #unpack
 xgb_unpack()
 {
@@ -43,6 +51,7 @@ xgb_unpack()
 	tar xf $XGPATH_SOURCE/$N-$V$R.tar.bz2
 }
 
+#配置函数
 #config
 xgb_config()
 {
@@ -58,6 +67,7 @@ xgb_config()
 	#./configure $XGB_CONFIG
 }
 
+#编译函数
 #build
 xgb_build()
 {
@@ -67,13 +77,15 @@ xgb_build()
 	#make
 }
 
-#check
+#编译检查函数
+#checke
 xgb_check()
 {
 	echo "checking $N-$V$R.."
 	#make check
 }
 
+#安装函数
 #install
 xgb_install()
 {
@@ -83,6 +95,7 @@ xgb_install()
 	#make DESTDIR=$XGPATH_DEST install
 }
 
+#安装后期配置函数，主要用于增加用户，修改程序权限，增加启动脚本
 #post install
 xgb_postinst()
 {
@@ -95,6 +108,7 @@ xgb_prerm()
 	echo "running before package delete..."
 }
 
+#卸载函数，与xgb_postinst 相反
 #post remove
 xgb_postrm()
 {

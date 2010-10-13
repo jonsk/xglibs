@@ -13,6 +13,8 @@ HOMEPAGE="http://savannah.gnu.org/projects/patch"
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
 
+SCRIPT_AUTHORS="Íõ½­Î°<jonsk.echo@gmail.com>"
+
 SRC_URI="ftp://ftp.gnu.org/gnu/patch/$N-$V$R.tar.bz2"
 
 

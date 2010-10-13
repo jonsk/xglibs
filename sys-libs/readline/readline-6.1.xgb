@@ -13,6 +13,8 @@ HOMEPAGE="http://tiswww.case.edu/php/chet/readline/rltop.html"
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
 
+SCRIPT_AUTHORS="Íõ½­Î°<jonsk.echo@gmail.com>"
+
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
 SRC_URI="ftp://ftp.gnu.org/gnu/readline/$N-$V$R.tar.gz \
 ftp://ftp.gnu.org/gnu/readline/readline-6.1-patches/readline61-001 \
