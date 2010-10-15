@@ -16,8 +16,8 @@ HOMEPAGE="http://httpd.apache.org/"
 SCRIPT_AUTHORS="Íõ½­Î°<jonsk.echo@gmail.com>"
 
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="http://archive.apache.org/dist/httpd/httpd-2.2.15.tar.bz2 \
-	http://svn.cross-lfs.org/svn/repos/patches/httpd/httpd-2.2.15-config-1.patch"
+SRC_URI="http://archive.apache.org/dist/httpd/httpd-2.2.16.tar.bz2 \
+	http://svn.cross-lfs.org/svn/repos/patches/httpd/httpd-2.2.16-config-1.patch"
 
 # Binary package URI.
 BIN_URI=""
@@ -52,18 +52,19 @@ xgb_config()
 
 	#fist, cd build directory
 	cd httpd-$V$R
-	patch -Np1 -i $XGPATH_SOURCE/httpd-2.2.15-config-1.patch
+	patch -Np1 -i $XGPATH_SOURCE/httpd-2.2.16-config-1.patch
 
 
 	#second, add package specified config params to XGB_CONFIG
 	XGB_CONFIG+=" --enable-layout=FHS --enable-mods-shared=all \
-		--enable-ssl -with-mpm=prefork \
+		--enable-ssl -with-mpm=prefork --disable-threads --disable-ipv6 \
 		--target=mips64el-unknown-linux-gnu \
 		--build=mips64el-unknown-linux-gnu \
 		--host=mips64el-unknown-linux-gnu "
 
 
 	#--enable-ssl -with-mpm=worker \
+		#--enable-ssl -with-mpm=prefork \
 
 	#Third, call configure with $XGB_CONFIG
 	./configure $XGB_CONFIG
