@@ -62,7 +62,10 @@ xgb_config()
 
 	#second, add package specified config params to XGB_CONFIG
 	XGB_CONFIG+=" --prefix=/usr --enable-thread-safety --sysconfdir=/etc \	
-		--with-openssl --with-perl --with-python  --libdir=/usr/lib32 "
+		--with-openssl --with-perl --with-python  --libdir=/usr/lib32 \
+		--target=mips64el-unknown-linux-gnu \
+                --build=mips64el-unknown-linux-gnu \
+                --host=mips64el-unknown-linux-gnu "
 
 	#Third, call configure with $XGB_CONFIG
 	./configure $XGB_CONFIG
