@@ -100,6 +100,22 @@ xgb_install()
 xgb_postinst()
 {
 	echo "running after package installed..."
+cat > /etc/xinetd.d/distcc << "EOF"
+# Begin /etc/xinetd.d/distcc
+
+service distcc
+{
+	disable        = no
+	socket_type    = stream
+	wait           = no
+	user           = root
+	server         = /usr/bin/distccd
+	server_args    = --inetd
+}
+
+# End /etc/xinetd.d/distcc
+EOF
+echo "dscc:345:respawn:/usr/bin/distccd --verbose --no-detach --daemon" >> /etc/inittab
 }
 
 #pre remove
