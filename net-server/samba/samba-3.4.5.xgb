@@ -4,11 +4,11 @@
 
 #简介
 # Short one-line description of this package.
-DESCRIPTION="时间服务器程序"
+DESCRIPTION="This is a sample skeleton xiange build script file"
 
 #项目主页
 # Homepage, not used by Portage directly but handy for developer reference
-HOMEPAGE="http://www.ntp.org/"
+HOMEPAGE="http://foo.bar.com/"
 
 # Point to any required sources; these will be automatically downloaded by
 # gpkg. 
@@ -20,8 +20,7 @@ SCRIPT_AUTHORS=""
 
 #软件下载地址
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="http://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2/ntp-4.2.4p7.tar.gz \
-	http://svn.cross-lfs.org/svn/repos/patches/ntp/ntp-4.2.4p7-glibc-1.patch"
+SRC_URI="http://us1.samba.org/samba/ftp/stable/samba-3.4.5.tar.gz"
 
 
 #二进制软件包下载地址
@@ -60,12 +59,12 @@ xgb_config()
 
 	#fist, cd build directory
 	cd $N-$V$R
-	echo "ac_cv_header_md5_h=no" > config.cache
+	cd source3
 
 	#second, add package specified config params to XGB_CONFIG
-	XGB_CONFIG+=" --prefix=/usr --bindir=/usr/sbin \
-		--sysconfdir=/etc --with-binsubdir=sbin \
-		--enable-shared --cache-file=config.cache "
+	XGB_CONFIG+=" --prefix=/usr --sysconfdir=/etc \
+		--libdir=/usr/lib32 --localstatedir=/var \
+		--with-piddir=/var/run --with-fhs --with-cifsmount "
 
 	#Third, call configure with $XGB_CONFIG
 	./configure $XGB_CONFIG
@@ -96,17 +95,18 @@ xgb_install()
 	echo "install to $XGPATH_DEST"
 
 	#install everything to $XGPATH_DEST
-	make DESTDIR=$XGPATH_DEST install
-	mkdir $XGPATH_DEST/etc/
-cat > $XGPATH_DEST/etc/ntp.conf << "EOF"
-	server 0.asia.pool.ntp.org
-	server 0.us.pool.ntp.org
-	server 1.us.pool.ntp.org
-	server 2.us.pool.ntp.org
-	driftfile /var/cache/ntp.drift
-EOF
+#	make DESTDIR=$XGPATH_DEST install
+	make DESTDIR=$XGPATH_DEST install ROOTSBINDIR=$XGPATH_DEST/sbin install-everything
+
 	cd /var/xiange/xglibs/bootscripts/
-	make DESTDIR=$XGPATH_DEST install-ntp
+	make $XGPATH_DEST install-samba
+	make $XGPATH_DEST install-winbind
+
+	install -v -m644 /tmp/xiange/sources/samba-3.4.5/examples/smb.conf.default $XGPATH_DEST/etc/samba
+
+	groupadd -g 65534 nobody &&
+	useradd -c "Nobody" -d /dev/null \
+		-u 65534 -g nobody -s /bin/false nobody
 }
 
 #安装后期配置函数，主要用于增加用户，修改程序权限，增加启动脚本

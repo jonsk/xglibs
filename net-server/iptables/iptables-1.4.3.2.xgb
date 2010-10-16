@@ -4,11 +4,11 @@
 
 #简介
 # Short one-line description of this package.
-DESCRIPTION="时间服务器程序"
+DESCRIPTION="Linux防火墙服务器"
 
 #项目主页
 # Homepage, not used by Portage directly but handy for developer reference
-HOMEPAGE="http://www.ntp.org/"
+HOMEPAGE="http://iptables.org/projects/iptables/index.html"
 
 # Point to any required sources; these will be automatically downloaded by
 # gpkg. 
@@ -16,12 +16,11 @@ HOMEPAGE="http://www.ntp.org/"
 # $V = package version, such as 2.6.10
 
 #作者
-SCRIPT_AUTHORS=""
+SCRIPT_AUTHORS="王江伟<jonsk.echo@gmail.com>"
 
 #软件下载地址
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="http://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2/ntp-4.2.4p7.tar.gz \
-	http://svn.cross-lfs.org/svn/repos/patches/ntp/ntp-4.2.4p7-glibc-1.patch"
+SRC_URI="http://iptables.org/projects/iptables/files/iptables-1.4.3.2.tar.bz2"
 
 
 #二进制软件包下载地址
@@ -49,7 +48,7 @@ xgb_unpack()
 {
 	#unpard file from $XGPATH_SOURCE to current directory.
 	echo "Unpacking to `pwd`"
-	tar xf $XGPATH_SOURCE/$N-$V$R.tar.gz
+	tar xf $XGPATH_SOURCE/$N-$V$R.tar.bz2
 }
 
 #配置函数
@@ -60,12 +59,10 @@ xgb_config()
 
 	#fist, cd build directory
 	cd $N-$V$R
-	echo "ac_cv_header_md5_h=no" > config.cache
 
 	#second, add package specified config params to XGB_CONFIG
-	XGB_CONFIG+=" --prefix=/usr --bindir=/usr/sbin \
-		--sysconfdir=/etc --with-binsubdir=sbin \
-		--enable-shared --cache-file=config.cache "
+	XGB_CONFIG+=" --prefix=/usr --libexecdir=/lib32/iptables \
+	    --bindir=/sbin --sbindir=/sbin "
 
 	#Third, call configure with $XGB_CONFIG
 	./configure $XGB_CONFIG
@@ -97,16 +94,8 @@ xgb_install()
 
 	#install everything to $XGPATH_DEST
 	make DESTDIR=$XGPATH_DEST install
-	mkdir $XGPATH_DEST/etc/
-cat > $XGPATH_DEST/etc/ntp.conf << "EOF"
-	server 0.asia.pool.ntp.org
-	server 0.us.pool.ntp.org
-	server 1.us.pool.ntp.org
-	server 2.us.pool.ntp.org
-	driftfile /var/cache/ntp.drift
-EOF
 	cd /var/xiange/xglibs/bootscripts/
-	make DESTDIR=$XGPATH_DEST install-ntp
+	make install-iptables
 }
 
 #安装后期配置函数，主要用于增加用户，修改程序权限，增加启动脚本

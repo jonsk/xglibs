@@ -4,11 +4,11 @@
 
 #简介
 # Short one-line description of this package.
-DESCRIPTION="时间服务器程序"
+DESCRIPTION="关系对象数据库程序，由Berkeley Postgres派生。"
 
 #项目主页
 # Homepage, not used by Portage directly but handy for developer reference
-HOMEPAGE="http://www.ntp.org/"
+HOMEPAGE="http://wwwmaster.postgresql.org"
 
 # Point to any required sources; these will be automatically downloaded by
 # gpkg. 
@@ -16,12 +16,11 @@ HOMEPAGE="http://www.ntp.org/"
 # $V = package version, such as 2.6.10
 
 #作者
-SCRIPT_AUTHORS=""
+SCRIPT_AUTHORS="王江伟<jonsk.echo@gmail.com>"
 
 #软件下载地址
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="http://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2/ntp-4.2.4p7.tar.gz \
-	http://svn.cross-lfs.org/svn/repos/patches/ntp/ntp-4.2.4p7-glibc-1.patch"
+SRC_URI="http://wwwmaster.postgresql.org/download/mirrors-ftp/source/v9.0.1/postgresql-9.0.1.tar.bz2"
 
 
 #二进制软件包下载地址
@@ -49,7 +48,7 @@ xgb_unpack()
 {
 	#unpard file from $XGPATH_SOURCE to current directory.
 	echo "Unpacking to `pwd`"
-	tar xf $XGPATH_SOURCE/$N-$V$R.tar.gz
+	tar xf $XGPATH_SOURCE/$N-$V$R.tar.bz2
 }
 
 #配置函数
@@ -60,12 +59,10 @@ xgb_config()
 
 	#fist, cd build directory
 	cd $N-$V$R
-	echo "ac_cv_header_md5_h=no" > config.cache
 
 	#second, add package specified config params to XGB_CONFIG
-	XGB_CONFIG+=" --prefix=/usr --bindir=/usr/sbin \
-		--sysconfdir=/etc --with-binsubdir=sbin \
-		--enable-shared --cache-file=config.cache "
+	XGB_CONFIG+=" --prefix=/usr --enable-thread-safety --sysconfdir=/etc \	
+		--with-openssl --with-perl --with-python  --libdir=/usr/lib32 "
 
 	#Third, call configure with $XGB_CONFIG
 	./configure $XGB_CONFIG
@@ -97,23 +94,24 @@ xgb_install()
 
 	#install everything to $XGPATH_DEST
 	make DESTDIR=$XGPATH_DEST install
-	mkdir $XGPATH_DEST/etc/
-cat > $XGPATH_DEST/etc/ntp.conf << "EOF"
-	server 0.asia.pool.ntp.org
-	server 0.us.pool.ntp.org
-	server 1.us.pool.ntp.org
-	server 2.us.pool.ntp.org
-	driftfile /var/cache/ntp.drift
-EOF
+	
 	cd /var/xiange/xglibs/bootscripts/
-	make DESTDIR=$XGPATH_DEST install-ntp
+	make DESTDIR=$XGPATH_DEST install-postgresql
+
+	useradd -s /bin/bash -d /home/postgres -g users -u 81 postgres
+
+	mkdir -pv $XGPATH_DEST/srv/pgsql/data
+	chown postgres.users $XGPATH_DEST/srv/pgsql/data
+	su postgres
+	initdb -D $XGPATH_DEST/srv/pgsql/data
+	pg_ctl -D $XGPATH_DEST/srv/pgsql/data -l $XGPATH_DEST/srv/pgsql/data/logfile  start
 }
 
 #安装后期配置函数，主要用于增加用户，修改程序权限，增加启动脚本
 #post install
 xgb_postinst()
 {
-	echo "running after package installed..."
+	echo "postgresql已经安装完成，数据库存放位置在/srv/pgsql/data"
 }
 
 #pre remove
@@ -127,4 +125,5 @@ xgb_prerm()
 xgb_postrm()
 {
 	echo "running after package delete..."
+	userdel postgres
 }

@@ -4,11 +4,11 @@
 
 #简介
 # Short one-line description of this package.
-DESCRIPTION="时间服务器程序"
+DESCRIPTION="rsync是一个开源工具，提供快速的增量的文件同步功能。"
 
 #项目主页
 # Homepage, not used by Portage directly but handy for developer reference
-HOMEPAGE="http://www.ntp.org/"
+HOMEPAGE="http://rsync.samba.org/"
 
 # Point to any required sources; these will be automatically downloaded by
 # gpkg. 
@@ -16,12 +16,10 @@ HOMEPAGE="http://www.ntp.org/"
 # $V = package version, such as 2.6.10
 
 #作者
-SCRIPT_AUTHORS=""
+SCRIPT_AUTHORS="王江伟<jonsk.echo@gmail.com>"
 
 #软件下载地址
-#SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="http://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2/ntp-4.2.4p7.tar.gz \
-	http://svn.cross-lfs.org/svn/repos/patches/ntp/ntp-4.2.4p7-glibc-1.patch"
+SRC_URI="http://samba.anu.edu.au/ftp/rsync/src/rsync-3.0.7.tar.gz"
 
 
 #二进制软件包下载地址
@@ -60,12 +58,9 @@ xgb_config()
 
 	#fist, cd build directory
 	cd $N-$V$R
-	echo "ac_cv_header_md5_h=no" > config.cache
 
 	#second, add package specified config params to XGB_CONFIG
-	XGB_CONFIG+=" --prefix=/usr --bindir=/usr/sbin \
-		--sysconfdir=/etc --with-binsubdir=sbin \
-		--enable-shared --cache-file=config.cache "
+	XGB_CONFIG+="  --prefix=/usr "
 
 	#Third, call configure with $XGB_CONFIG
 	./configure $XGB_CONFIG
@@ -97,16 +92,22 @@ xgb_install()
 
 	#install everything to $XGPATH_DEST
 	make DESTDIR=$XGPATH_DEST install
-	mkdir $XGPATH_DEST/etc/
-cat > $XGPATH_DEST/etc/ntp.conf << "EOF"
-	server 0.asia.pool.ntp.org
-	server 0.us.pool.ntp.org
-	server 1.us.pool.ntp.org
-	server 2.us.pool.ntp.org
-	driftfile /var/cache/ntp.drift
+	mkdir $XGPATH_DEST/etc
+
+cat > /etc/rsyncd.conf << "EOF"
+motd file = /home/rsync/welcome.msg
+use chroot = yes
+uid = rsyncd
+gid = rsyncd
+
+[localhost]
+	path = /home/rsync
+	comment = Default rsync module
+	read only = yes
+	list = yes
 EOF
 	cd /var/xiange/xglibs/bootscripts/
-	make DESTDIR=$XGPATH_DEST install-ntp
+	make install-rsyncd
 }
 
 #安装后期配置函数，主要用于增加用户，修改程序权限，增加启动脚本
@@ -114,6 +115,8 @@ EOF
 xgb_postinst()
 {
 	echo "running after package installed..."
+	groupadd -g 49 rsyncd &&
+	useradd -c "rsyncd Daemon" -d /home/rsync -g rsyncd -s /bin/false -u 49 rsyncd
 }
 
 #pre remove
