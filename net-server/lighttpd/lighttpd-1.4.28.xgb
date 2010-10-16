@@ -92,7 +92,7 @@ xgb_install()
 	echo "install to $XGPATH_DEST"
 
 	#install everything to $XGPATH_DEST
-	#make DESTDIR=$XGPATH_DEST install
+	make DESTDIR=$XGPATH_DEST install
 }
 
 #安装后期配置函数，主要用于增加用户，修改程序权限，增加启动脚本

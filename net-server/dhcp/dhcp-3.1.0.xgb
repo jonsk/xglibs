@@ -4,11 +4,11 @@
 
 #简介
 # Short one-line description of this package.
-DESCRIPTION="关系对象数据库程序，由Berkeley Postgres派生。"
+DESCRIPTION="动态主机名与IP分配服务器（DHCP）"
 
 #项目主页
 # Homepage, not used by Portage directly but handy for developer reference
-HOMEPAGE="http://wwwmaster.postgresql.org"
+HOMEPAGE="http://www.isc.org/software/dhcp"
 
 # Point to any required sources; these will be automatically downloaded by
 # gpkg. 
@@ -20,7 +20,8 @@ SCRIPT_AUTHORS="王江伟<jonsk.echo@gmail.com>"
 
 #软件下载地址
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="http://wwwmaster.postgresql.org/redir/391/f/source/v9.0.1/postgresql-9.0.1.tar.bz2"
+SRC_URI="http://ftp.isc.org/isc/dhcp/dhcp-3.1-history/dhcp-3.1.0.tar.gz \
+	http://svn.cross-lfs.org/svn/repos/patches/dhcp/dhcp-3.1.0-iproute2-1.patch"
 
 
 #二进制软件包下载地址
@@ -59,10 +60,10 @@ xgb_config()
 
 	#fist, cd build directory
 	cd $N-$V$R
+	patch -Np1 -i $XGPATH_SOURCE/dhcp-3.1.0-iproute2-1.patch
 
 	#second, add package specified config params to XGB_CONFIG
-	XGB_CONFIG+=" --prefix=/usr --enable-thread-safety --sysconfdir=/etc \	
-		--with-openssl --with-perl --with-python  --libdir=/usr/lib32 "
+	#XGB_CONFIG+=" "
 
 	#Third, call configure with $XGB_CONFIG
 	./configure $XGB_CONFIG
@@ -75,7 +76,7 @@ xgb_build()
 	echo "make $N-$V$R..."
 
 	#run make in current directory
-	make
+	make 
 }
 
 #编译检查函数
@@ -93,25 +94,38 @@ xgb_install()
 	echo "install to $XGPATH_DEST"
 
 	#install everything to $XGPATH_DEST
-	make DESTDIR=$XGPATH_DEST install
-	
+#	make DESTDIR=$XGPATH_DEST install
+	make DESTDIR=$XGPATH_DEST LIBDIR=$XGPATH_DEST/usr/lib \
+	INCDIR=$XGPATH_DEST/usr/include install
+
+	mkdir -pv $XGPATH_DEST/var/state/dhcp/
+	touch $XGPATH_DEST/var/state/dhcp/dhcpd.leases
+
+cat > $XGPATH_DEST/etc/dhcpd.conf << "EOF"
+allow unknown-clients;
+server-identifier 192.168.1.254;
+ddns-update-style interim;
+
+subnet 192.168.1.0 netmask 255.255.255.0 {
+option broadcast-address 192.168.1.255;
+range 192.168.1.100 192.168.1.200;
+default-lease-time 86400;
+max-lease-time 86400;
+option subnet-mask 255.255.255.0;
+option domain-name-servers DNS_SERVER_NAMES;
+option routers 192.168.1.254;
+}
+EOF
 	cd /var/xiange/xglibs/bootscripts/
-	make DESTDIR=$XGPATH_DEST install-postgresql
+	make DESTDIR=$XGPATH_DEST install-dhcp
 
-	useradd -s /bin/bash -d /home/postgres -g users -u 81 postgres
-
-	mkdir -pv $XGPATH_DEST/srv/pgsql/data
-	chown postgres.users $XGPATH_DEST/srv/pgsql/data
-	su postgres
-	initdb -D $XGPATH_DEST/srv/pgsql/data
-	pg_ctl -D $XGPATH_DEST/srv/pgsql/data -l $XGPATH_DEST/srv/pgsql/data/logfile  start
 }
 
 #安装后期配置函数，主要用于增加用户，修改程序权限，增加启动脚本
 #post install
 xgb_postinst()
 {
-	echo "postgresql已经安装完成，数据库存放位置在/srv/pgsql/data"
+	echo "running after package installed..."
 }
 
 #pre remove
@@ -125,5 +139,4 @@ xgb_prerm()
 xgb_postrm()
 {
 	echo "running after package delete..."
-	userdel postgres
 }
