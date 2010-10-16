@@ -4,7 +4,7 @@
 
 #简介
 # Short one-line description of this package.
-DESCRIPTION=""
+DESCRIPTION="分布式编译服务器程序"
 
 #项目主页
 # Homepage, not used by Portage directly but handy for developer reference
@@ -61,7 +61,9 @@ xgb_config()
 	cd $N-$V$R
 
 	#second, add package specified config params to XGB_CONFIG
-	#XGB_CONFIG+=" --foo --bar "
+	XGB_CONFIG+=" --prefix=/usr --sysconfdir=/etc \
+	    --with-docdir=/usr/share/doc/distcc-2.18.3 \
+	        --enable-rfc2553 "
 
 	#Third, call configure with $XGB_CONFIG
 	./configure $XGB_CONFIG
