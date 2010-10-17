@@ -106,14 +106,15 @@ xgb_install()
 #post install
 xgb_postinst()
 {
-	echo "postgresql已经安装完成"
+	echo "postgresql已经安装完成,请自行初始数据库"
+	groupadd users
 	useradd -s /bin/bash -d /home/postgres -g users -u 81 postgres
-
-	mkdir -pv /srv/pgsql/data
-        chown postgres.users /srv/pgsql/data
-	su postgres
-        /tmp/xiange/pack/postgresql-9.0.1/usr/bin/initdb -D /srv/pgsql/data
-        /tmp/xiange/pack/postgresql-9.0.1/usr/bin/pg_ctl -D /srv/pgsql/data -l /srv/pgsql/data/logfile  start
+	echo "推荐使用下列位置存放数据库，你也可以使用下面的命令初始化数据库文件"
+	echo "mkdir -pv /srv/pgsql/data"
+        echo "chown postgres.users /srv/pgsql/data"
+	echo "su postgres"
+        echo "initdb -D /srv/pgsql/data"
+        echo "pg_ctl -D /srv/pgsql/data/logfile  start"
 }
 
 #pre remove

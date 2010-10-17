@@ -61,7 +61,8 @@ xgb_config()
 
 	#fist, cd build directory
 	cd $N-$V$R
-        cp -ar ../iptables-1.4.1-rc2/include/linux/netfilter_ipv4/* ./include/linux/netfilter_ipv4/
+        cp -ar ../iptables-1.4.1-rc2/include/linux/netfilter_ipv4/ipt_DSCP.h ./include/linux/netfilter_ipv4/
+        cp -ar ../iptables-1.4.1-rc2/include/linux/netfilter_ipv4/ipt_dscp.h ./include/linux/netfilter_ipv4/
 
 	#second, add package specified config params to XGB_CONFIG
 	XGB_CONFIG+=" --prefix=/usr --libexecdir=/lib32/iptables \
