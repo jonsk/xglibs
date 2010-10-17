@@ -8,7 +8,7 @@ DESCRIPTION="Linux防火墙服务器"
 
 #项目主页
 # Homepage, not used by Portage directly but handy for developer reference
-HOMEPAGE="http://iptables.org/projects/iptables/index.html"
+HOMEPAGE="http://iptables.org/projects/iptables/index.html "
 
 # Point to any required sources; these will be automatically downloaded by
 # gpkg. 
@@ -20,7 +20,8 @@ SCRIPT_AUTHORS="王江伟<jonsk.echo@gmail.com>"
 
 #软件下载地址
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="http://iptables.org/projects/iptables/files/iptables-1.4.3.2.tar.bz2"
+SRC_URI="http://iptables.org/projects/iptables/files/iptables-1.4.3.2.tar.bz2 \
+	http://ftp.netfilter.org/pub/iptables/iptables-1.4.1-rc2.tar.bz2"
 
 
 #二进制软件包下载地址
@@ -49,6 +50,7 @@ xgb_unpack()
 	#unpard file from $XGPATH_SOURCE to current directory.
 	echo "Unpacking to `pwd`"
 	tar xf $XGPATH_SOURCE/$N-$V$R.tar.bz2
+	tar xf $XGPATH_SOURCE/iptables-1.4.1-rc2.tar.bz2
 }
 
 #配置函数
@@ -59,6 +61,7 @@ xgb_config()
 
 	#fist, cd build directory
 	cd $N-$V$R
+        cp -ar ../iptables-1.4.1-rc2/include/linux/netfilter_ipv4/* ./include/linux/netfilter_ipv4/
 
 	#second, add package specified config params to XGB_CONFIG
 	XGB_CONFIG+=" --prefix=/usr --libexecdir=/lib32/iptables \
@@ -96,6 +99,8 @@ xgb_install()
 	make DESTDIR=$XGPATH_DEST install
 	cd /var/xiange/xglibs/bootscripts/
 	make install-iptables
+	mkdir -pv $XGPATH_DEST/usr/include/linux/netfilter_ipv4
+	cp -ar $XGPATH_SOURCE/ipt_dscp.h $XGPATH_DEST/usr/include/linux/netfilter_ipv4
 }
 
 #安装后期配置函数，主要用于增加用户，修改程序权限，增加启动脚本

@@ -1,7 +1,5 @@
 ﻿#网页服务
 apache
-thttpd
-uhttpd
 lighttpd
 
 #网页语言
@@ -10,8 +8,6 @@ PHP
 
 #时间服务
 ntpd
-openntpd
-ntp-utils
 
 #SQL数据库服务
 mysql
@@ -27,15 +23,12 @@ samba
 
 #DNS server
 bind
-maradns
 
 #动态IP、主机名分配服务
-dhcp-server
-dhcpcd
+dhcp
 
 #邮件服务
 sendmail
-Dovecot
 postmail
 
 #同步服务

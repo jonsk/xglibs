@@ -100,21 +100,20 @@ xgb_install()
 	
 	cd /var/xiange/xglibs/bootscripts/
 	make DESTDIR=$XGPATH_DEST install-postgresql
-
-	useradd -s /bin/bash -d /home/postgres -g users -u 81 postgres
-
-	mkdir -pv $XGPATH_DEST/srv/pgsql/data
-	chown postgres.users $XGPATH_DEST/srv/pgsql/data
-	su postgres
-	initdb -D $XGPATH_DEST/srv/pgsql/data
-	pg_ctl -D $XGPATH_DEST/srv/pgsql/data -l $XGPATH_DEST/srv/pgsql/data/logfile  start
 }
 
 #安装后期配置函数，主要用于增加用户，修改程序权限，增加启动脚本
 #post install
 xgb_postinst()
 {
-	echo "postgresql已经安装完成，数据库存放位置在/srv/pgsql/data"
+	echo "postgresql已经安装完成"
+	useradd -s /bin/bash -d /home/postgres -g users -u 81 postgres
+
+	mkdir -pv /srv/pgsql/data
+        chown postgres.users /srv/pgsql/data
+	su postgres
+        /tmp/xiange/pack/postgresql-9.0.1/usr/bin/initdb -D /srv/pgsql/data
+        /tmp/xiange/pack/postgresql-9.0.1/usr/bin/pg_ctl -D /srv/pgsql/data -l /srv/pgsql/data/logfile  start
 }
 
 #pre remove

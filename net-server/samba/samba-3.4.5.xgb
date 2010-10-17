@@ -101,12 +101,13 @@ xgb_install()
 	cd /var/xiange/xglibs/bootscripts/
 	make $XGPATH_DEST install-samba
 	make $XGPATH_DEST install-winbind
-
+	
+	mkdir $XGPATH_DEST/etc/samba
 	install -v -m644 /tmp/xiange/sources/samba-3.4.5/examples/smb.conf.default $XGPATH_DEST/etc/samba
 
-	groupadd -g 65534 nobody &&
-	useradd -c "Nobody" -d /dev/null \
-		-u 65534 -g nobody -s /bin/false nobody
+#	groupadd -g 65534 nobody &&
+#	useradd -c "Nobody" -d /dev/null \
+#		-u 65534 -g nobody -s /bin/false nobody
 }
 
 #安装后期配置函数，主要用于增加用户，修改程序权限，增加启动脚本
