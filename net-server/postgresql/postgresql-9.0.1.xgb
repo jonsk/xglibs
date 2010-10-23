@@ -129,4 +129,6 @@ xgb_postrm()
 {
 	echo "running after package delete..."
 	userdel postgres
+	groupdel users
+	rm -rf /home/postgres
 }

@@ -2,23 +2,28 @@
 #
 # Xiange Linux build scripts
 
+#简介
 # Short one-line description of this package.
-DESCRIPTION="apache is web server"
+DESCRIPTION="硬盘阵列管理程序"
 
+#项目主页
 # Homepage, not used by Portage directly but handy for developer reference
-HOMEPAGE="http://httpd.apache.org/"
+HOMEPAGE="http://neil.brown.name/blog/mdadm"
 
 # Point to any required sources; these will be automatically downloaded by
 # gpkg. 
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
 
+#作者
 SCRIPT_AUTHORS="王江伟<jonsk.echo@gmail.com>"
 
+#软件下载地址
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="http://archive.apache.org/dist/httpd/httpd-2.2.16.tar.bz2 \
-	http://svn.cross-lfs.org/svn/repos/patches/httpd/httpd-2.2.16-config-1.patch"
+SRC_URI="http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-3.0.tar.gz"
 
+
+#二进制软件包下载地址
 # Binary package URI.
 BIN_URI=""
 
@@ -37,39 +42,32 @@ xgb_init()
 	echo "init $N-$V$R build script..."
 }
 
+#解压函数
 #unpack
 xgb_unpack()
 {
 	#unpard file from $XGPATH_SOURCE to current directory.
 	echo "Unpacking to `pwd`"
-	tar xf $XGPATH_SOURCE/httpd-$V$R.tar.bz2
+	tar xf $XGPATH_SOURCE/$N-$V$R.tar.gz
 }
 
+#配置函数
 #config
 xgb_config()
 {
 	echo "config $N-$V$R..."
 
 	#fist, cd build directory
-	cd httpd-$V$R
-	patch -Np1 -i $XGPATH_SOURCE/httpd-2.2.16-config-1.patch
-
+	cd $N-$V$R
 
 	#second, add package specified config params to XGB_CONFIG
-	XGB_CONFIG+=" --enable-layout=FHS --enable-mods-shared=all \
-		--enable-ssl -with-mpm=worker \
-		--target=mips64el-unknown-linux-gnu \
-		--build=mips64el-unknown-linux-gnu \
-		--host=mips64el-unknown-linux-gnu "
-
-
-	#--enable-ssl -with-mpm=worker --disable-ipv6 \
-	#--enable-ssl -with-mpm=prefork --disable-ipv6 \
+	#XGB_CONFIG+=" --foo --bar "
 
 	#Third, call configure with $XGB_CONFIG
-	./configure $XGB_CONFIG
+	#./configure $XGB_CONFIG
 }
 
+#编译函数
 #build
 xgb_build()
 {
@@ -79,43 +77,25 @@ xgb_build()
 	make
 }
 
-#check
+#编译检查函数
+#checke
 xgb_check()
 {
 	echo "checking $N-$V$R.."
 	#make check
 }
 
+#安装函数
 #install
 xgb_install()
 {
 	echo "install to $XGPATH_DEST"
 
-	#增加Apache用户
-	groupadd -g 25 apache &&
-	useradd -c "Apache Server" -d /dev/null -g apache \
-	-s /bin/false -u 25 apache
-
 	#install everything to $XGPATH_DEST
 	make DESTDIR=$XGPATH_DEST install
-
-	#安装Apache启动脚本。
-	cd /var/xiange/xglibs/bootscripts/
-	make DESTDIR=$XGPATH_DEST install-apache
-
-	#调整程序权限
-	chown -v root:root $XGPATH_DEST/usr/lib/apache/httpd.exp \
-	$XGPATH_DEST/usr/sbin/{apxs,apachectl,dbmmanage,envvars{,-std}} \
-	$XGPATH_DEST/usr/share/man/*
-	chown -Rv apache:apache $XGPATH_DEST/srv/www
-
-	#修改配置文件用户组为apache
-	sed -i -e "s/User daemon/User apache/" \
-	-e "s/Group daemon/Group apache/" \
-	$XGPATH_DEST/etc/apache/httpd.conf
-
 }
 
+#安装后期配置函数，主要用于增加用户，修改程序权限，增加启动脚本
 #post install
 xgb_postinst()
 {
@@ -128,12 +108,9 @@ xgb_prerm()
 	echo "running before package delete..."
 }
 
+#卸载函数，与xgb_postinst 相反
 #post remove
 xgb_postrm()
 {
 	echo "running after package delete..."
-	#删除Apache用户
-	groupdel apache
-	userdel apache
-	
 }
