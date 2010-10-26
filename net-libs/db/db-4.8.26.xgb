@@ -4,11 +4,11 @@
 
 #简介
 # Short one-line description of this package.
-DESCRIPTION="适合用Web开发的脚本语言。"
+DESCRIPTION="小而精的数据库系统，并提供一系列的应用程序接口"
 
 #项目主页
 # Homepage, not used by Portage directly but handy for developer reference
-HOMEPAGE="http://www.php.net/"
+HOMEPAGE="http://www.oracle.com/technology/products/berkeley-db/index.html"
 
 # Point to any required sources; these will be automatically downloaded by
 # gpkg. 
@@ -16,11 +16,11 @@ HOMEPAGE="http://www.php.net/"
 # $V = package version, such as 2.6.10
 
 #作者
-SCRIPT_AUTHORS="王江伟<jonsk.echo@gmail.com>"
+SCRIPT_AUTHORS=""
 
 #软件下载地址
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="http://cn2.php.net/get/php-5.3.3.tar.bz2/from/cn.php.net/mirror"
+SRC_URI="http://download-east.oracle.com/berkeley-db/db-4.8.26.tar.gz"
 
 
 #二进制软件包下载地址
@@ -48,8 +48,7 @@ xgb_unpack()
 {
 	#unpard file from $XGPATH_SOURCE to current directory.
 	echo "Unpacking to `pwd`"
-	cp $XGPATH_SOURCE/mirror $XGPATH_SOURCE/$N-$V$R.tar.bz2
-	tar xf $XGPATH_SOURCE/$N-$V$R.tar.bz2
+	tar xf $XGPATH_SOURCE/$N-$V$R.tar.gz
 }
 
 #配置函数
@@ -60,42 +59,14 @@ xgb_config()
 
 	#fist, cd build directory
 	cd $N-$V$R
+	cd build_unix 
 
 	#second, add package specified config params to XGB_CONFIG
-	XGB_CONFIG+="--prefix=/usr/ \
-	--sysconfdir=/etc/php \
-	--libdir=/usr/lib \
-	--localstatedir=/var \
-	--with-layout=GNU \
-	--with-mysql \
-	--enable-sockets  \
-	--enable-sysvmsg  \
-	--enable-sysvsem  \
-	--enable-sysvshm  \
-	--enable-shmop      \            
-	--enable-exif  \
-	--enable-ftp  \
-	--enable-sqlite-utf8 \
-	--enable-mbstring  \
-	--enable-pcntl  \
-	--with-openssl \
-	--with-zlib \
-	--with-png-dir=/usr/ \
-	--with-jpeg-dir=/usr/ \
-	--with-freetype-dir=/usr/ \
-	--enable-gd-native-ttf  \
-	--enable-zip \
-	--with-pgsql \
-	--with-pdo-pgsql \
-	--enable-fastcgi \
-	--enable-force-cgi-redirect \
-	--disable-ipv6 \
-	--target=mips64el-unknown-linux-gnu \
-	--build=mips64el-unknown-linux-gnu \
-	--host=mips64el-unknown-linux-gnu"
+	XGB_CONFIG+="--prefix=/usr \
+	    --enable-compat185 --enable-cxx "
 
 	#Third, call configure with $XGB_CONFIG
-	./configure $XGB_CONFIG
+	../dist/configure $XGB_CONFIG
 }
 
 #编译函数
@@ -113,7 +84,7 @@ xgb_build()
 xgb_check()
 {
 	echo "checking $N-$V$R.."
-	make test
+	#make check
 }
 
 #安装函数
@@ -123,11 +94,12 @@ xgb_install()
 	echo "install to $XGPATH_DEST"
 
 	#install everything to $XGPATH_DEST
-#	make DESTDIR=$XGPATH_DEST install
-	make INSTALL_ROOT="$XGPATH" install || die "make install failed"
-	
-	mkdir -pv $XGPATH_DEST/etc/php
-	cp php.ini-production $XGPATH_DEST/etc/php/php.ini
+	#make DESTDIR=$XGPATH_DEST install
+	make DESTDIR=$XGPATH_DEST docdir=$XGPATH_DEST/usr/share/doc/db-4.7.25 install
+	rm -rf $XGPATH_DEST/usr/share/doc/db-4.7.25
+	chown -v root:root $XGPATH_DEST/usr/bin/db_* $XGPATH_DEST/usr/lib/libdb* $XGPATH_DEST/usr/include/db* 
+#	chown -v root:root $XGPATH_DEST/usr/bin/berkeley_db_svc &&
+#	chown -v -R root:root $XGPATH_DEST/usr/share/doc/db-4.7.25
 }
 
 #安装后期配置函数，主要用于增加用户，修改程序权限，增加启动脚本

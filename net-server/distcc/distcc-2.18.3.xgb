@@ -4,11 +4,11 @@
 
 #简介
 # Short one-line description of this package.
-DESCRIPTION="适合用Web开发的脚本语言。"
+DESCRIPTION="分布式编译服务器程序"
 
 #项目主页
 # Homepage, not used by Portage directly but handy for developer reference
-HOMEPAGE="http://www.php.net/"
+HOMEPAGE="http://distcc.samba.org/"
 
 # Point to any required sources; these will be automatically downloaded by
 # gpkg. 
@@ -16,11 +16,11 @@ HOMEPAGE="http://www.php.net/"
 # $V = package version, such as 2.6.10
 
 #作者
-SCRIPT_AUTHORS="王江伟<jonsk.echo@gmail.com>"
+SCRIPT_AUTHORS=""
 
 #软件下载地址
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="http://cn2.php.net/get/php-5.3.3.tar.bz2/from/cn.php.net/mirror"
+SRC_URI="http://distcc.samba.org/ftp/distcc/distcc-2.18.3.tar.bz2"
 
 
 #二进制软件包下载地址
@@ -48,7 +48,6 @@ xgb_unpack()
 {
 	#unpard file from $XGPATH_SOURCE to current directory.
 	echo "Unpacking to `pwd`"
-	cp $XGPATH_SOURCE/mirror $XGPATH_SOURCE/$N-$V$R.tar.bz2
 	tar xf $XGPATH_SOURCE/$N-$V$R.tar.bz2
 }
 
@@ -62,37 +61,9 @@ xgb_config()
 	cd $N-$V$R
 
 	#second, add package specified config params to XGB_CONFIG
-	XGB_CONFIG+="--prefix=/usr/ \
-	--sysconfdir=/etc/php \
-	--libdir=/usr/lib \
-	--localstatedir=/var \
-	--with-layout=GNU \
-	--with-mysql \
-	--enable-sockets  \
-	--enable-sysvmsg  \
-	--enable-sysvsem  \
-	--enable-sysvshm  \
-	--enable-shmop      \            
-	--enable-exif  \
-	--enable-ftp  \
-	--enable-sqlite-utf8 \
-	--enable-mbstring  \
-	--enable-pcntl  \
-	--with-openssl \
-	--with-zlib \
-	--with-png-dir=/usr/ \
-	--with-jpeg-dir=/usr/ \
-	--with-freetype-dir=/usr/ \
-	--enable-gd-native-ttf  \
-	--enable-zip \
-	--with-pgsql \
-	--with-pdo-pgsql \
-	--enable-fastcgi \
-	--enable-force-cgi-redirect \
-	--disable-ipv6 \
-	--target=mips64el-unknown-linux-gnu \
-	--build=mips64el-unknown-linux-gnu \
-	--host=mips64el-unknown-linux-gnu"
+	XGB_CONFIG+=" --prefix=/usr --sysconfdir=/etc \
+	    --with-docdir=/usr/share/doc/distcc-2.18.3 \
+	        --enable-rfc2553 "
 
 	#Third, call configure with $XGB_CONFIG
 	./configure $XGB_CONFIG
@@ -113,7 +84,7 @@ xgb_build()
 xgb_check()
 {
 	echo "checking $N-$V$R.."
-	make test
+	make check
 }
 
 #安装函数
@@ -123,11 +94,7 @@ xgb_install()
 	echo "install to $XGPATH_DEST"
 
 	#install everything to $XGPATH_DEST
-#	make DESTDIR=$XGPATH_DEST install
-	make INSTALL_ROOT="$XGPATH" install || die "make install failed"
-	
-	mkdir -pv $XGPATH_DEST/etc/php
-	cp php.ini-production $XGPATH_DEST/etc/php/php.ini
+	make DESTDIR=$XGPATH_DEST install
 }
 
 #安装后期配置函数，主要用于增加用户，修改程序权限，增加启动脚本
@@ -135,6 +102,22 @@ xgb_install()
 xgb_postinst()
 {
 	echo "running after package installed..."
+cat > /etc/xinetd.d/distcc << "EOF"
+# Begin /etc/xinetd.d/distcc
+
+service distcc
+{
+	disable        = no
+	socket_type    = stream
+	wait           = no
+	user           = root
+	server         = /usr/bin/distccd
+	server_args    = --inetd
+}
+
+# End /etc/xinetd.d/distcc
+EOF
+echo "dscc:345:respawn:/usr/bin/distccd --verbose --no-detach --daemon" >> /etc/inittab
 }
 
 #pre remove
