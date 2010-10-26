@@ -64,7 +64,7 @@ xgb_config()
 	XGB_CONFIG+=" --prefix=/usr --with-bzip2 --with-zlib  \
 		--with-webdav-locks --with-webdav-props \
 		--with-openssl=/usr/lib --with-openssl-includes=/usr/include/ 
-		--disable-ipv6"
+		--disable-ipv6 --with-mysql --with-ldap "
 	#--with-webdav-props --with-mysql[=PATH]
 
 	#Third, call configure with $XGB_CONFIG
@@ -98,10 +98,15 @@ xgb_install()
 	#install everything to $XGPATH_DEST
 	make DESTDIR=$XGPATH_DEST install
 	mkdir -pv $XGPATH_DEST/etc/rc.d/init.d
-	sed -e 's/FOO/lighttpd/g' doc/initscripts/rc.lighttpd > $XGPATH_DEST/etc/init.d/lighttpd
 	cp -p doc/initscripts/sysconfig.lighttpd $XGPATH_DEST/etc/rc.d/init.d/lighttpd
+	chmod a+rx $XGPATH_DEST/etc/rc.d/init.d/lighttpd
 	mkdir -p $XGPATH_DEST/etc/lighttpd
 	cp -R doc/config/conf.d/ doc/config/*.conf doc/config/vhosts.d/ $XGPATH_DEST/etc/lighttpd/
+	rm -rf $XGPATH_DEST/etc/lighttpd/vhosts.d/Makefile*
+	rm -rf $XGPATH_DEST/etc/lighttpd/conf.d/Makefile*
+	sed -e 's/FOO/lighttpd/g' doc/initscripts/rc.lighttpd > $XGPATH_DEST/etc/rc.d/init.d/lighttpd
+	mkdir -pv $XGPATH_DEST/var/log/lighttpd/
+	touch $XGPATH_DEST/var/log/lighttpd/{access.log,error.log}
 }
 
 #安装后期配置函数，主要用于增加用户，修改程序权限，增加启动脚本
@@ -109,6 +114,10 @@ xgb_install()
 xgb_postinst()
 {
 	echo "running after package installed..."
+	groupadd -g 26 lighttpd &&
+	useradd -c "Lighttpd Server" -d /dev/null -g lighttpd -s /bin/false -u 26 lighttpd
+	mkdir -pv /var/log/lighttpd/
+	chown -R lighttpd:lighttpd /var/log/lighttpd/{access.log,error.log}
 }
 
 #pre remove
@@ -122,4 +131,6 @@ xgb_prerm()
 xgb_postrm()
 {
 	echo "running after package delete..."
+	groupdel lighttpd
+	userdel lighttpd
 }

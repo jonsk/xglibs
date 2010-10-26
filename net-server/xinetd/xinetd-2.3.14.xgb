@@ -103,7 +103,7 @@ xgb_install()
 xgb_postinst()
 {
 	echo "running after package installed..."
-	cat > /etc/xinetd.conf << "EOF"
+	cat > $XGPATH_DEST/etc/xinetd.conf << "EOF"
 # Begin /etc/xinetd
 # Configuration file for xinetd
 #
@@ -122,9 +122,9 @@ defaults
 includedir /etc/xinetd.d
 # End /etc/xinetd
 EOF
-	install -v -d -m755 /etc/xinetd.d
+	install -v -d -m755 $XGPATH_DEST/etc/xinetd.d
 
-cat > /etc/xinetd.d/login << "EOF" &&
+cat > $XGPATH_DEST/etc/xinetd.d/login << "EOF" &&
 # Begin /etc/xinetd.d/login
 
 service login
@@ -140,7 +140,7 @@ service login
 
 # End /etc/xinetd.d/login
 EOF
-cat > /etc/xinetd.d/shell << "EOF" &&
+cat > $XGPATH_DEST/etc/xinetd.d/shell << "EOF" &&
 # Begin /etc/xinetd.d/shell
 
 service shell
@@ -157,7 +157,7 @@ service shell
 
 # End /etc/xinetd.d/shell
 EOF
-cat > /etc/xinetd.d/exec << "EOF" &&
+cat > $XGPATH_DEST/etc/xinetd.d/exec << "EOF" &&
 # Begin /etc/xinetd.d/exec
 
 service exec
@@ -171,7 +171,7 @@ service exec
 
 # End /etc/xinetd.d/exec
 EOF
-cat > /etc/xinetd.d/comsat << "EOF" &&
+cat > $XGPATH_DEST/etc/xinetd.d/comsat << "EOF" &&
 # Begin /etc/xinetd.d/comsat
 
 service comsat
@@ -186,7 +186,7 @@ service comsat
 
 # End /etc/xinetd.d/comsat
 EOF
-cat > /etc/xinetd.d/talk << "EOF" &&
+cat > $XGPATH_DEST/etc/xinetd.d/talk << "EOF" &&
 # Begin /etc/xinetd.d/talk
 
 service talk
@@ -200,7 +200,7 @@ service talk
 
 # End /etc/xinetd.d/talk
 EOF
-cat > /etc/xinetd.d/ntalk << "EOF" &&
+cat > $XGPATH_DEST/etc/xinetd.d/ntalk << "EOF" &&
 # Begin /etc/xinetd.d/ntalk
 
 service ntalk
@@ -214,7 +214,7 @@ service ntalk
 
 # End /etc/xinetd.d/ntalk
 EOF
-cat > /etc/xinetd.d/telnet << "EOF" &&
+cat > $XGPATH_DEST/etc/xinetd.d/telnet << "EOF" &&
 # Begin /etc/xinetd.d/telnet
 
 service telnet
@@ -242,7 +242,7 @@ service telnet
 
 # End /etc/xinetd.d/telnet
 EOF
-cat > /etc/xinetd.d/ftp << "EOF" &&
+cat > $XGPATH_DEST/etc/xinetd.d/ftp << "EOF" &&
 # Begin /etc/xinetd.d/ftp
 
 service ftp
@@ -262,7 +262,7 @@ service ftp
 
 # End /etc/xinetd.d/ftp
 EOF
-cat > /etc/xinetd.d/finger << "EOF" &&
+cat > $XGPATH_DEST/etc/xinetd.d/finger << "EOF" &&
 # Begin /etc/xinetd.d/finger
 
 service finger
@@ -276,7 +276,7 @@ service finger
 
 # End /etc/xinetd.d/finger
 EOF
-cat > /etc/xinetd.d/systat << "EOF" &&
+cat > $XGPATH_DEST/etc/xinetd.d/systat << "EOF" &&
 # Begin /etc/xinetd.d/systat
 
 service systat
@@ -293,7 +293,7 @@ service systat
 
 # End /etc/xinetd.d/systat
 EOF
-cat > /etc/xinetd.d/netstat << "EOF" &&
+cat > $XGPATH_DEST/etc/xinetd.d/netstat << "EOF" &&
 # Begin /etc/xinetd.d/netstat
 
 service netstat
@@ -310,7 +310,7 @@ service netstat
 
 # End /etc/xinetd.d/netstat
 EOF
-cat > /etc/xinetd.d/echo << "EOF" &&
+cat > $XGPATH_DEST/etc/xinetd.d/echo << "EOF" &&
 # Begin /etc/xinetd.d/echo
 
 service echo
@@ -337,7 +337,7 @@ service echo
 
 # End /etc/xinetd.d/echo
 EOF
-cat > /etc/xinetd.d/chargen << "EOF" &&
+cat > $XGPATH_DEST/etc/xinetd.d/chargen << "EOF" &&
 # Begin /etc/xinetd.d/chargen
 
 service chargen
@@ -364,7 +364,7 @@ service chargen
 
 # End /etc/xinetd.d/chargen
 EOF
-cat > /etc/xinetd.d/daytime << "EOF" &&
+cat > $XGPATH_DEST/etc/xinetd.d/daytime << "EOF" &&
 # Begin /etc/xinetd.d/daytime
 
 service daytime
@@ -391,7 +391,7 @@ service daytime
 
 # End /etc/xinetd.d/daytime
 EOF
-cat > /etc/xinetd.d/time << "EOF" &&
+cat > $XGPATH_DEST/etc/xinetd.d/time << "EOF" &&
 # Begin /etc/xinetd.d/time
 
 service time
@@ -419,7 +419,7 @@ service time
 
 # End /etc/xinetd.d/time
 EOF
- cat > /etc/xinetd.d/rstatd << "EOF" &&
+ cat > $XGPATH_DEST/etc/xinetd.d/rstatd << "EOF" &&
 # Begin /etc/xinetd.d/rstatd
 
 service rstatd
@@ -437,7 +437,7 @@ service rstatd
 
 # End /etc/xinetd.d/rstatd
 EOF
-cat > /etc/xinetd.d/rquotad << "EOF" &&
+cat > $XGPATH_DEST/etc/xinetd.d/rquotad << "EOF" &&
 # Begin /etc/xinetd.d/rquotad
 
 service rquotad
@@ -454,7 +454,7 @@ service rquotad
 
 # End /etc/xinetd.d/rquotad
 EOF
-cat > /etc/xinetd.d/rusersd << "EOF" &&
+cat > $XGPATH_DEST/etc/xinetd.d/rusersd << "EOF" &&
 # Begin /etc/xinetd.d/rusersd
 
 service rusersd
@@ -471,7 +471,7 @@ service rusersd
 
 # End /etc/xinetd.d/rusersd
 EOF
-cat > /etc/xinetd.d/sprayd << "EOF" &&
+cat > $XGPATH_DEST/etc/xinetd.d/sprayd << "EOF" &&
 # Begin /etc/xinetd.d/sprayd
 
 service sprayd
@@ -488,7 +488,7 @@ service sprayd
 
 # End /etc/xinetd.d/sprayd
 EOF
-cat > /etc/xinetd.d/walld << "EOF" &&
+cat > $XGPATH_DEST/etc/xinetd.d/walld << "EOF" &&
 # Begin /etc/xinetd.d/walld
 
 service walld
@@ -507,7 +507,7 @@ service walld
 # End /etc/xinetd.d/walld
 EOF
 
-cat > /etc/xinetd.d/irc << "EOF"
+cat > $XGPATH_DEST/etc/xinetd.d/irc << "EOF"
 # Begin /etc/xinetd.d/irc
 
 service irc

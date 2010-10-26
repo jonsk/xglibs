@@ -98,7 +98,7 @@ xgb_build()
 	echo "make $N-$V$R..."
 
 	#run make in current directory
-	make testdir=$XGPATH_DEST/tmp/mysql
+	make testdir=/tmp/mysql
 }
 
 #编译检查函数
@@ -106,7 +106,7 @@ xgb_build()
 xgb_check()
 {
 	echo "checking $N-$V$R.."
-	make test 
+	#make test 
 }
 
 #安装函数
@@ -117,13 +117,16 @@ xgb_install()
 
 	#install everything to $XGPATH_DEST
 	#make DESTDIR=$XGPATH_DEST install
-	make DESTDIR=$XGPATH_DEST testdir=$XGPATH_DEST/tmp/mysql install &&
-	rm -rf $XGPATH_DEST /tmp/mysql &&
-	mkdir -pv $XGPATH_DEST /usr/lib &&
-	cd $XGPATH_DEST /usr/lib &&
+	make testdir=/tmp/mysql DESTDIR=$XGPATH_DEST install 
+	rm -rf /tmp/mysql
+	mv $XGPATH_DEST/usr/{mysql-test,sql-bench} $XGPATH_DEST/usr/share/mysql/
+	mkdir -pv $XGPATH_DEST/usr/lib 
+	cd $XGPATH_DEST/usr/lib 
 	ln -v -sf mysql/libmysqlclient{,_r}.so* .
 	mkdir -pv $XGPATH_DEST/etc/
 	install -v -m644 $XGPATH_DEST/usr/share/mysql/my-medium.cnf $XGPATH_DEST/etc/my.cnf
+	sed -i 's/skip-locking/skip-external-locking/g' $XGPATH_DEST/etc/my.cnf
+
 	ln -sv mysqlcheck $XGPATH_DEST/usr/bin/mysqlanalyze &&
 	ln -sv mysqlcheck $XGPATH_DEST/usr/bin/mysqlrepair &&
 	ln -sv mysqlcheck $XGPATH_DEST/usr/bin/mysqloptimize
@@ -136,6 +139,7 @@ xgb_install()
 	chmod 0660 $XGPATH_DEST/var/log/mysql/mysql*
 	cd /var/xiange/xglibs/bootscripts/
 	make DESTDIR=$XGPATH_DEST install-mysql
+	rm -rf $XGPATH_DEST/tmp/mysql 
 }
 
 #安装后期配置函数，主要用于增加用户，修改程序权限，增加启动脚本
@@ -145,14 +149,27 @@ xgb_postinst()
 	echo "running after package installed..."
 	groupadd -g 40 mysql &&
 	useradd -c "MySQL Server" -d /dev/null -g mysql -s /bin/false -u 40 mysql
-	/usr/bin/mysql_install_db --user=mysql &&
-	chgrp -v mysql /srv/mysql{,/test,/mysql}
-	mysqld_safe --user=mysql 2>&1 >/dev/null &
-	mysqladmin -u root password 'xiange'
-	/usr/bin/mysql --user=root --password mysql < /usr/share/mysql/fill_help_tables.sql
-	/usr/bin/mysql_tzinfo_to_sql /usr/share/zoneinfo > /tmp/mysql_tzinfo.sql &&
-	/usr/bin/mysql --user=root --password mysql < /tmp/mysql_tzinfo.sql
-	mysqladmin -p shutdown
+
+	chmod 777 /tmp
+	
+#	/usr/bin/mysql_install_db --user=mysql 
+#	chgrp -v mysql /srv/mysql{,/test,/mysql}
+#	mysqld_safe --user=mysql 2>&1 >/dev/null
+#	mysqladmin -u root password 'xiange'
+#	/usr/bin/mysql --user=root --password mysql < /usr/share/mysql/fill_help_tables.sql
+#	/usr/bin/mysql_tzinfo_to_sql /usr/share/zoneinfo > /tmp/mysql_tzinfo.sql
+#	/usr/bin/mysql --user=root --password mysql < /tmp/mysql_tzinfo.sql
+#	mysqladmin -p shutdown
+
+	echo "MySQL安装完成，请使用下面的命令建立数据库文件"
+	echo "/usr/bin/mysql_install_db --user=mysql &&"
+	echo "chgrp -v mysql /srv/mysql{,/test,/mysql}"
+	echo "mysqld_safe --user=mysql 2>&1 >/dev/null &"
+	echo "mysqladmin -u root password 'xiange'"
+	echo "/usr/bin/mysql --user=root --password mysql < /usr/share/mysql/fill_help_tables.sql"
+	echo "/usr/bin/mysql_tzinfo_to_sql /usr/share/zoneinfo > /tmp/mysql_tzinfo.sql &&"
+	echo "/usr/bin/mysql --user=root --password mysql < /tmp/mysql_tzinfo.sql"
+	echo "mysqladmin -p shutdown"
 
 }
 
@@ -167,4 +184,6 @@ xgb_prerm()
 xgb_postrm()
 {
 	echo "running after package delete..."
+	userdel mysql
+	groupdel mysql
 }
