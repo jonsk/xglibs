@@ -124,7 +124,7 @@ xgb_install()
 
 	#install everything to $XGPATH_DEST
 #	make DESTDIR=$XGPATH_DEST install
-	make INSTALL_ROOT="$XGPATH" install || die "make install failed"
+	make INSTALL_ROOT="$XGPATH_DEST" install || die "make install failed"
 	
 	mkdir -pv $XGPATH_DEST/etc/php
 	cp php.ini-production $XGPATH_DEST/etc/php/php.ini
