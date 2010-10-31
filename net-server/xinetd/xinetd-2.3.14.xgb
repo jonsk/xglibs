@@ -103,6 +103,8 @@ xgb_install()
 xgb_postinst()
 {
 	echo "running after package installed..."
+	mkdir -pv $XGPATH_DEST/etc/
+
 	cat > $XGPATH_DEST/etc/xinetd.conf << "EOF"
 # Begin /etc/xinetd
 # Configuration file for xinetd
