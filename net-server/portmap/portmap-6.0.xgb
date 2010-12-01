@@ -92,7 +92,9 @@ xgb_install()
 	echo "install to $XGPATH_DEST"
 
 	#install everything to $XGPATH_DEST
-	make DESTDIR=$XGPATH_DEST install
+	mkdir -pv $XGPATH_DEST/sbin
+	mkdir -pv $XGPATH_DEST/usr/share/man/man8/
+	make BASEDIR=$XGPATH_DEST install
 	cd /var/xiange/xglibs/bootscripts/
 	make DESTDIR=$XGPATH_DEST install-portmap
 }
@@ -116,4 +118,5 @@ xgb_prerm()
 xgb_postrm()
 {
 	echo "running after package delete..."
+	userdel bin
 }
