@@ -1,0 +1,120 @@
+#!/bin/bash
+#
+# Xiange Linux build scripts
+
+#简介
+# Short one-line description of this package.
+DESCRIPTIOk="Berkeley 因特网域名服务器"
+
+#项目主页
+# Homepage, not used by Portage directly but handy for developer reference
+HOMEPAGE="http://www.bind9.net/"
+
+# Point to any required sources; these will be automatically downloaded by
+# gpkg. 
+# $N = package name, such as autoconf, x-org
+# $V = package version, such as 2.6.10
+
+#作者
+SCRIPT_AUTHORS="王江伟<jonsk.echo@gmail.com>"
+
+#软件下载地址
+#SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
+SRC_URI="http://ftp.isc.org/isc/bind9/9.6.1-P2/bind-9.6.1-P2.tar.gz"
+
+
+#二进制软件包下载地址
+# Binary package URI.
+BIN_URI=""
+
+
+# Runtime Depend
+RDEPEND=""
+
+# Build time depend
+DEPEND="${RDEPEND}"
+
+
+
+#init 
+xgb_init()
+{
+	echo "init $N-$V$R build script..."
+}
+
+#解压函数
+#unpack
+xgb_unpack()
+{
+	#unpard file from $XGPATH_SOURCE to current directory.
+	echo "Unpacking to `pwd`"
+	tar xf $XGPATH_SOURCE/$N-$V$R.tar.bz2
+}
+
+#配置函数
+#config
+xgb_config()
+{
+	echo "config $N-$V$R..."
+
+	#fist, cd build directory
+	cd $N-$V$R
+
+	#second, add package specified config params to XGB_CONFIG
+	XGB_CONFIG+=" --prefix=/usr --sysconfdir=/etc --localstatedir=/var --enable-threads --with-libtool"
+
+	#Third, call configure with $XGB_CONFIG
+	./configure $XGB_CONFIG
+}
+
+#编译函数
+#build
+xgb_build()
+{
+	echo "make $N-$V$R..."
+
+	#run make in current directory
+	make
+}
+
+#编译检查函数
+#checke
+xgb_check()
+{
+	echo "checking $N-$V$R.."
+	#make check
+}
+
+#安装函数
+#install
+xgb_install()
+{
+	echo "install to $XGPATH_DEST"
+
+	#install everything to $XGPATH_DEST
+	make DESTDIR=$XGPATH_DEST install
+	cd /var/xiange/xglibs/bootscripts/
+	make install-bind
+}
+
+#安装后期配置函数，主要用于增加用户，修改程序权限，增加启动脚本
+#post install
+xgb_postinst()
+{
+	echo "running after package installed..."
+	groupadd -g 52 named &&
+	useradd -c 'BIND User' -d /srv/named -g named -s /bin/false -u 52 named
+}
+
+#pre remove
+xgb_prerm()
+{
+	echo "running before package delete..."
+}
+
+#卸载函数，与xgb_postinst 相反
+#post remove
+xgb_postrm()
+{
+	echo "running after package delete..."
+}
