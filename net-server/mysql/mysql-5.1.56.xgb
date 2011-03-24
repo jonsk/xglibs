@@ -84,8 +84,8 @@ xgb_config()
 	--with-unix-socket-path=/var/run/mysql/mysql.sock \
 	--with-plugins=csv,myisam,myisammrg,heap,innobase \
 	--with-embedded-server \
-	--with-embedded-privilege-control "
-#	--with-ssl 
+	--with-embedded-privilege-control 
+	--with-ssl "
 
 	#Third, call configure with $XGB_CONFIG
 	./configure $XGB_CONFIG
@@ -130,16 +130,8 @@ xgb_install()
 	ln -sv mysqlcheck $XGPATH_DEST/usr/bin/mysqlanalyze &&
 	ln -sv mysqlcheck $XGPATH_DEST/usr/bin/mysqlrepair &&
 	ln -sv mysqlcheck $XGPATH_DEST/usr/bin/mysqloptimize
-	mkdir -pv $XGPATH_DEST/var/run/mysql 
-	mkdir -pv $XGPATH_DEST/var/log/mysql
-	install -v -m755 -o mysql -g mysql -d $XGPATH_DEST/var/run/mysql &&
-	install -v -m750 -o mysql -g mysql -d $XGPATH_DEST/var/log/mysql &&
-	touch $XGPATH_DEST/var/log/mysql/mysql.{log,err} &&
-	chown mysql:mysql $XGPATH_DEST/var/log/mysql/mysql* &&
-	chmod 0660 $XGPATH_DEST/var/log/mysql/mysql*
 	cd /var/xiange/xglibs/bootscripts/
 	make DESTDIR=$XGPATH_DEST install-mysql
-	rm -rf $XGPATH_DEST/tmp/mysql 
 }
 
 #安装后期配置函数，主要用于增加用户，修改程序权限，增加启动脚本
@@ -151,6 +143,13 @@ xgb_postinst()
 	useradd -c "MySQL Server" -d /dev/null -g mysql -s /bin/false -u 40 mysql
 
 	chmod 777 /tmp
+	mkdir -pv /var/run/mysql
+        mkdir -pv /var/log/mysql
+        install -v -m755 -o mysql -g mysql -d /var/run/mysql &&
+        install -v -m750 -o mysql -g mysql -d /var/log/mysql &&
+        touch /var/log/mysql/mysql.{log,err} &&
+        chown mysql:mysql /var/log/mysql/mysql* &&
+        chmod 0660 /var/log/mysql/mysql*
 	
 #	/usr/bin/mysql_install_db --user=mysql 
 #	chgrp -v mysql /srv/mysql{,/test,/mysql}
