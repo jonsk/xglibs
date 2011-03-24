@@ -96,7 +96,6 @@ xgb_install()
 	echo "install to $XGPATH_DEST"
 
 	#install everything to $XGPATH_DEST
-#	make DESTDIR=$XGPATH_DEST install
 	make DESTDIR=$XGPATH_DEST install ROOTSBINDIR=$XGPATH_DEST/sbin install-everything
 
 	cd /var/xiange/xglibs/bootscripts/
@@ -104,7 +103,7 @@ xgb_install()
 	make DESTDIR=$XGPATH_DEST install-winbind
 	
 	mkdir $XGPATH_DEST/etc/samba
-	install -v -m644 /tmp/xiange/sources/samba-3.5.8/examples/smb.conf.default $XGPATH_DEST/etc/samba
+	install -v -m644 /tmp/xiange/sources/samba-3.5.8/examples/smb.conf.default $XGPATH_DEST/etc/samba/smb.conf
 
 #	groupadd -g 65534 nobody &&
 #	useradd -c "Nobody" -d /dev/null \
