@@ -65,7 +65,7 @@ xgb_config()
 	XGB_CONFIG+=" --prefix=/usr --sysconfdir=/etc \
 		--libdir=/usr/lib32 --localstatedir=/var \
 		--with-piddir=/var/run --with-fhs \
-		--with-winbind --with-quotas "
+		--with-winbind --with-quotas --disable-swat"
 
 	#Third, call configure with $XGB_CONFIG
 	./configure $XGB_CONFIG
