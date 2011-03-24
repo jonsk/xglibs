@@ -16,8 +16,7 @@ HOMEPAGE="http://httpd.apache.org/"
 SCRIPT_AUTHORS="Íõ½­Î°<jonsk.echo@gmail.com>"
 
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="http://archive.apache.org/dist/httpd/httpd-2.2.17.tar.bz2 \
-	http://svn.cross-lfs.org/svn/repos/patches/httpd/httpd-2.2.9-config-1.patch"
+SRC_URI="http://archive.apache.org/dist/httpd/httpd-2.2.17.tar.bz2 "
 
 # Binary package URI.
 BIN_URI=""
