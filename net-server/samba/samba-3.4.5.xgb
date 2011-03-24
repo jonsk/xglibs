@@ -64,7 +64,7 @@ xgb_config()
 	#second, add package specified config params to XGB_CONFIG
 	XGB_CONFIG+=" --prefix=/usr --sysconfdir=/etc \
 		--libdir=/usr/lib32 --localstatedir=/var \
-		--with-piddir=/var/run --with-fhs --with-cifsmount "
+		--with-piddir=/var/run --with-fhs --with-smbmount "
 
 	#Third, call configure with $XGB_CONFIG
 	./configure $XGB_CONFIG

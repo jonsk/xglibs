@@ -52,7 +52,8 @@ xgb_build()
 	echo "make $N-$V$R..."
 
 	#run make in current directory
-	make -f unix/Makefile linux
+#	make -f unix/Makefile linux
+	make generic
 }
 
 #check

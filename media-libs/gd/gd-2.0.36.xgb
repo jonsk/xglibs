@@ -13,7 +13,8 @@ HOMEPAGE="http://libgd.org/"
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
 
-SRC_URI="http://www.libgd.org/releases/gd-2.0.36RC1.tar.bz2"
+SRC_URI="http://134.160.82.20/archives/graphics/gd/gd-2.0.36RC1.tar.bz2"
+#SRC_URI="http://www.libgd.org/releases/gd-2.0.36RC1.tar.bz2"
 
 
 # Binary package URI.

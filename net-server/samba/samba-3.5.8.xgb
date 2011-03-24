@@ -4,11 +4,11 @@
 
 #简介
 # Short one-line description of this package.
-DESCRIPTION="适合用Web开发的脚本语言。"
+DESCRIPTION="在Linux上使用访问和共享Windows目录"
 
 #项目主页
 # Homepage, not used by Portage directly but handy for developer reference
-HOMEPAGE="http://www.php.net/"
+HOMEPAGE="http://foo.bar.com/"
 
 # Point to any required sources; these will be automatically downloaded by
 # gpkg. 
@@ -16,11 +16,11 @@ HOMEPAGE="http://www.php.net/"
 # $V = package version, such as 2.6.10
 
 #作者
-SCRIPT_AUTHORS="王江伟<jonsk.echo@gmail.com>"
+SCRIPT_AUTHORS=""
 
 #软件下载地址
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="http://cn2.php.net/get/php-5.3.3.tar.bz2/from/cn.php.net/mirror"
+SRC_URI="http://www.samba.org/samba/ftp/old-versions/samba-3.5.8.tar.gz"
 
 
 #二进制软件包下载地址
@@ -48,8 +48,7 @@ xgb_unpack()
 {
 	#unpard file from $XGPATH_SOURCE to current directory.
 	echo "Unpacking to `pwd`"
-	cp $XGPATH_SOURCE/mirror $XGPATH_SOURCE/$N-$V$R.tar.bz2
-	tar xf $XGPATH_SOURCE/$N-$V$R.tar.bz2
+	tar xf $XGPATH_SOURCE/$N-$V$R.tar.gz
 }
 
 #配置函数
@@ -60,42 +59,13 @@ xgb_config()
 
 	#fist, cd build directory
 	cd $N-$V$R
+	cd source3
 
 	#second, add package specified config params to XGB_CONFIG
-	XGB_CONFIG+="--prefix=/usr/ \
-	--sysconfdir=/etc/php \
-	--libdir=/usr/lib \
-	--localstatedir=/var \
-	--with-layout=GNU \
-	--with-mysql \
-	--with-mysql=mysqlnd \
-	--with-mysqli=mysqlnd \
-	--with-pdo-mysql=mysqlnd \
-	--enable-sockets  \
-	--enable-sysvmsg  \
-	--enable-sysvsem  \
-	--enable-sysvshm  \
-	--enable-shmop      \            
-	--enable-exif  \
-	--enable-ftp  \
-	--with-iconv \
-	--enable-mbregex \
-	--enable-sqlite-utf8 \
-	--enable-mbstring  \
-	--enable-pcntl  \
-	--with-openssl \
-	--with-zlib \
-	--with-png-dir=/usr/ \
-	--with-jpeg-dir=/usr/ \
-	--with-freetype-dir=/usr/ \
-	--enable-gd-native-ttf  \
-	--enable-zip \
-	--enable-fastcgi \
-	--enable-force-cgi-redirect \
-	--disable-ipv6 \
-	--target=mips64el-unknown-linux-gnu \
-	--build=mips64el-unknown-linux-gnu \
-	--host=mips64el-unknown-linux-gnu"
+	XGB_CONFIG+=" --prefix=/usr --sysconfdir=/etc \
+		--libdir=/usr/lib32 --localstatedir=/var \
+		--with-piddir=/var/run --with-fhs \
+		--with-winbind --with-quotas "
 
 	#Third, call configure with $XGB_CONFIG
 	./configure $XGB_CONFIG
@@ -116,7 +86,7 @@ xgb_build()
 xgb_check()
 {
 	echo "checking $N-$V$R.."
-	make test
+	#make check
 }
 
 #安装函数
@@ -127,10 +97,18 @@ xgb_install()
 
 	#install everything to $XGPATH_DEST
 #	make DESTDIR=$XGPATH_DEST install
-	make INSTALL_ROOT="$XGPATH_DEST" install || die "make install failed"
+	make DESTDIR=$XGPATH_DEST install ROOTSBINDIR=$XGPATH_DEST/sbin install-everything
+
+	cd /var/xiange/xglibs/bootscripts/
+	make DESTDIR=$XGPATH_DEST install-samba
+	make DESTDIR=$XGPATH_DEST install-winbind
 	
-	mkdir -pv $XGPATH_DEST/etc/php
-	cp php.ini-production $XGPATH_DEST/etc/php/php.ini
+	mkdir $XGPATH_DEST/etc/samba
+	install -v -m644 /tmp/xiange/sources/samba-3.5.8/examples/smb.conf.default $XGPATH_DEST/etc/samba
+
+#	groupadd -g 65534 nobody &&
+#	useradd -c "Nobody" -d /dev/null \
+#		-u 65534 -g nobody -s /bin/false nobody
 }
 
 #安装后期配置函数，主要用于增加用户，修改程序权限，增加启动脚本

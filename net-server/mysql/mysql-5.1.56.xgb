@@ -1,0 +1,189 @@
+#!/bin/bash
+#
+# Xiange Linux build scripts
+
+#简介
+# Short one-line description of this package.
+DESCRIPTION="MySQL是一个广泛使用和快速的SQL数据库服务器"
+
+#项目主页
+# Homepage, not used by Portage directly but handy for developer reference
+HOMEPAGE="http://www.mysql.com/"
+
+# Point to any required sources; these will be automatically downloaded by
+# gpkg. 
+# $N = package name, such as autoconf, x-org
+# $V = package version, such as 2.6.10
+
+#作者
+SCRIPT_AUTHORS=""
+
+#软件下载地址
+#SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
+SRC_URI="http://files.directadmin.com/services/all/mysql/mysql-5.1.56.tar.gz"
+
+
+#二进制软件包下载地址
+# Binary package URI.
+BIN_URI=""
+
+
+# Runtime Depend
+RDEPEND=""
+
+# Build time depend
+DEPEND="${RDEPEND}"
+
+
+
+#init 
+xgb_init()
+{
+	echo "init $N-$V$R build script..."
+}
+
+#解压函数
+#unpack
+xgb_unpack()
+{
+	#unpard file from $XGPATH_SOURCE to current directory.
+	echo "Unpacking to `pwd`"
+	tar xf $XGPATH_SOURCE/$N-$V$R.tar.gz
+}
+
+#配置函数
+#config
+xgb_config()
+{
+	echo "config $N-$V$R..."
+
+	#fist, cd build directory
+	cd $N-$V$R
+	sed -i "315,332d" Makefile.am
+
+	#second, add package specified config params to XGB_CONFIG
+	XGB_CONFIG+=" --prefix=/usr \
+	--sysconfdir=/etc \
+	--libexecdir=/usr/sbin \
+	--localstatedir=/srv/mysql \
+	--enable-assembler \
+	--enable-local-infile \
+	--without-debug \
+	--with-libwrap --with-readline \
+	--with-geometry \
+	--with-low-memory \
+	--without-pstack \
+	--without-docs \
+	--enable-thread-safe-client \
+	--with-client-ldflags=-lstdc++ \
+	--with-charset=utf8 \
+	--with-collation=utf8_general_ci \
+	--with-extra-charsets=gbk,gb2312,binary,utf8,big5,ascii \
+	--with-mysqld-user=mysql \
+	--with-server \
+	--with-unix-socket-path=/var/run/mysql/mysql.sock \
+	--with-plugins=csv,myisam,myisammrg,heap,innobase \
+	--with-embedded-server \
+	--with-embedded-privilege-control "
+#	--with-ssl 
+
+	#Third, call configure with $XGB_CONFIG
+	./configure $XGB_CONFIG
+}
+
+#编译函数
+#build
+xgb_build()
+{
+	echo "make $N-$V$R..."
+
+	#run make in current directory
+	make testdir=/tmp/mysql
+}
+
+#编译检查函数
+#checke
+xgb_check()
+{
+	echo "checking $N-$V$R.."
+	#make test 
+}
+
+#安装函数
+#install
+xgb_install()
+{
+	echo "install to $XGPATH_DEST"
+
+	#install everything to $XGPATH_DEST
+	#make DESTDIR=$XGPATH_DEST install
+	make testdir=/tmp/mysql DESTDIR=$XGPATH_DEST install 
+	rm -rf /tmp/mysql
+	mv $XGPATH_DEST/usr/{mysql-test,sql-bench} $XGPATH_DEST/usr/share/mysql/
+	mkdir -pv $XGPATH_DEST/usr/lib 
+	cd $XGPATH_DEST/usr/lib 
+	ln -v -sf mysql/libmysqlclient{,_r}.so* .
+	mkdir -pv $XGPATH_DEST/etc/
+	install -v -m644 $XGPATH_DEST/usr/share/mysql/my-medium.cnf $XGPATH_DEST/etc/my.cnf
+	sed -i 's/skip-locking/skip-external-locking/g' $XGPATH_DEST/etc/my.cnf
+
+	ln -sv mysqlcheck $XGPATH_DEST/usr/bin/mysqlanalyze &&
+	ln -sv mysqlcheck $XGPATH_DEST/usr/bin/mysqlrepair &&
+	ln -sv mysqlcheck $XGPATH_DEST/usr/bin/mysqloptimize
+	mkdir -pv $XGPATH_DEST/var/run/mysql 
+	mkdir -pv $XGPATH_DEST/var/log/mysql
+	install -v -m755 -o mysql -g mysql -d $XGPATH_DEST/var/run/mysql &&
+	install -v -m750 -o mysql -g mysql -d $XGPATH_DEST/var/log/mysql &&
+	touch $XGPATH_DEST/var/log/mysql/mysql.{log,err} &&
+	chown mysql:mysql $XGPATH_DEST/var/log/mysql/mysql* &&
+	chmod 0660 $XGPATH_DEST/var/log/mysql/mysql*
+	cd /var/xiange/xglibs/bootscripts/
+	make DESTDIR=$XGPATH_DEST install-mysql
+	rm -rf $XGPATH_DEST/tmp/mysql 
+}
+
+#安装后期配置函数，主要用于增加用户，修改程序权限，增加启动脚本
+#post install
+xgb_postinst()
+{
+	echo "running after package installed..."
+	groupadd -g 40 mysql &&
+	useradd -c "MySQL Server" -d /dev/null -g mysql -s /bin/false -u 40 mysql
+
+	chmod 777 /tmp
+	
+#	/usr/bin/mysql_install_db --user=mysql 
+#	chgrp -v mysql /srv/mysql{,/test,/mysql}
+#	mysqld_safe --user=mysql 2>&1 >/dev/null
+#	mysqladmin -u root password 'xiange'
+#	/usr/bin/mysql --user=root --password mysql < /usr/share/mysql/fill_help_tables.sql
+#	/usr/bin/mysql_tzinfo_to_sql /usr/share/zoneinfo > /tmp/mysql_tzinfo.sql
+#	/usr/bin/mysql --user=root --password mysql < /tmp/mysql_tzinfo.sql
+#	mysqladmin -p shutdown
+
+	echo "MySQL安装完成，请使用下面的命令建立数据库文件"
+	echo "/usr/bin/mysql_install_db --user=mysql &&"
+	echo "chgrp -v mysql /srv/mysql{,/test,/mysql}"
+	echo "mysqld_safe --user=mysql 2>&1 >/dev/null &"
+	echo "mysqladmin -u root password 'xiange'"
+	echo "/usr/bin/mysql --user=root --password mysql < /usr/share/mysql/fill_help_tables.sql"
+	echo "/usr/bin/mysql_tzinfo_to_sql /usr/share/zoneinfo > /tmp/mysql_tzinfo.sql &&"
+	echo "/usr/bin/mysql --user=root --password mysql < /tmp/mysql_tzinfo.sql"
+	echo "mysqladmin -p shutdown"
+
+}
+
+#pre remove
+xgb_prerm()
+{
+	echo "running before package delete..."
+}
+
+#卸载函数，与xgb_postinst 相反
+#post remove
+xgb_postrm()
+{
+	echo "running after package delete..."
+	userdel mysql
+	groupdel mysql
+}
