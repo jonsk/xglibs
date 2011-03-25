@@ -16,3 +16,14 @@ libxml2-2.7.6
 lighttpd-1.4.28
 samba-3.5.8
 
+bind
+dhcp
+#distcc
+iptables
+ntp
+postfix
+postgresql
+proftpd
+rsync
+xinetd
+
