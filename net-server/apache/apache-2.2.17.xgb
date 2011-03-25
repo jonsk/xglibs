@@ -16,7 +16,8 @@ HOMEPAGE="http://httpd.apache.org/"
 SCRIPT_AUTHORS="Íõ½­Î°<jonsk.echo@gmail.com>"
 
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="http://archive.apache.org/dist/httpd/httpd-2.2.17.tar.bz2 "
+SRC_URI="http://archive.apache.org/dist/httpd/httpd-2.2.17.tar.bz2 \
+	http://svn.cross-lfs.org/svn/repos/patches/httpd/httpd-2.2.9-config-1.patch"
 
 # Binary package URI.
 BIN_URI=""
@@ -51,6 +52,31 @@ xgb_config()
 
 	#fist, cd build directory
 	cd httpd-$V$R
+	# BLFS FHS layout
+cat >> config.layout  << "EOF"
+	<Layout FHS>
+	    prefix:             /usr
+	    exec_prefix:        ${prefix}
+	    bindir:             ${exec_prefix}/bin
+	    sbindir:            ${exec_prefix}/sbin
+	    libdir:             ${exec_prefix}/lib
+	    libexecdir:         ${exec_prefix}/lib/apache
+	    mandir:             ${prefix}/share/man
+	    sysconfdir:         /etc/apache
+	    datadir:            /srv/www
+	    installbuilddir:    ${libexecdir}/build
+	    errordir:           ${datadir}/error
+	    iconsdir:           ${datadir}/icons
+	    htdocsdir:          ${datadir}/htdocs
+	   manualdir:          ${datadir}/manual
+	    cgidir:             ${datadir}/cgi-bin
+	    includedir:         ${prefix}/include/apache
+	    localstatedir:      ${datadir}
+	    runtimedir:         /var/run
+	    logfiledir:         /var/log/apache
+	    proxycachedir:      /var/cache/apache/proxy
+	</Layout>
+EOF
 
 
 	#second, add package specified config params to XGB_CONFIG
