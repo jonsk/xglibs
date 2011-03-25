@@ -55,7 +55,7 @@ xgb_config()
 
 	#second, add package specified config params to XGB_CONFIG
 	XGB_CONFIG+=" --enable-layout=FHS --enable-mods-shared=all \
-		--enable-ssl -with-mpm=worker \
+		--enable-ssl -with-mpm=worker --disable-ipv6 \
 		--target=mips64el-unknown-linux-gnu \
 		--build=mips64el-unknown-linux-gnu \
 		--host=mips64el-unknown-linux-gnu "
