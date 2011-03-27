@@ -84,8 +84,8 @@ xgb_config()
 	--with-unix-socket-path=/var/run/mysql/mysql.sock \
 	--with-plugins=csv,myisam,myisammrg,heap,innobase \
 	--with-embedded-server \
-	--with-embedded-privilege-control 
-	--with-ssl "
+	--with-embedded-privilege-control "
+#	--with-ssl "
 
 	#Third, call configure with $XGB_CONFIG
 	./configure $XGB_CONFIG
