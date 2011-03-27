@@ -10,6 +10,7 @@ libpng-1.2.43
 ethtool-2.6.38
 mysql-5.1.56
 pcre-8.10
+mcrypt
 php-5.3.3
 sqlite-autoconf-3070500
 libxml2-2.7.6
