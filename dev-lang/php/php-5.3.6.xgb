@@ -71,7 +71,6 @@ xgb_config()
 	--with-mysql=mysqlnd \
 	--with-mysqli=mysqlnd \
 	--with-pdo-mysql=mysqlnd \
-	--with-mcrypt-dir=/usr/lib/libmcrypt \
 	--enable-sockets  \
 	--enable-sysvmsg  \
 	--enable-sysvsem  \
@@ -80,6 +79,8 @@ xgb_config()
 	--with-mcrypt \
 	--enable-exif  \
 	--enable-ftp  \
+	--with-gd=/usr \
+	--enable-gd-native-ttf \
 	--with-iconv \
 	--enable-mbregex \
 	--enable-sqlite-utf8 \
@@ -87,13 +88,14 @@ xgb_config()
 	--enable-pcntl  \
 	--with-openssl \
 	--with-zlib \
+	--with-zlib-dir=/usr \
 	--with-png-dir=/usr/ \
 	--with-jpeg-dir=/usr/ \
 	--with-freetype-dir=/usr/ \
-	--enable-gd-native-ttf  \
+	--with-openssl-dir=/usr/ \
 	--enable-zip \
-	--enable-fastcgi \
-	--enable-force-cgi-redirect \
+	--with-libxml-dir=/usr \
+	--with-ldap=/usr \
 	--disable-ipv6 \
 	--target=mips64el-unknown-linux-gnu \
 	--build=mips64el-unknown-linux-gnu \

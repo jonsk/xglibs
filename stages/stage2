@@ -16,7 +16,7 @@ mhash
 mcrypt
 fcgi-2.4.0
 libxml2
-php-5.3.3
+php-5.3.6
 sqlite-autoconf-3070500
 libxml2-2.7.6
 lighttpd-1.4.28
