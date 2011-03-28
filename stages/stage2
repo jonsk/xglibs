@@ -9,6 +9,7 @@ libjpeg-8
 libpng-1.2.43
 ethtool-2.6.38
 mysql-5.1.56
+openldap
 pcre-8.10
 libmcrypt
 mhash
@@ -25,7 +26,6 @@ dhcp
 iptables
 ntp
 postfix
-postgresql
 proftpd
 rsync
 xinetd
