@@ -4,11 +4,11 @@
 
 #简介
 # Short one-line description of this package.
-DESCRIPTION="适合用Web开发的脚本语言。"
+DESCRIPTION="This is a sample skeleton xiange build script file"
 
 #项目主页
 # Homepage, not used by Portage directly but handy for developer reference
-HOMEPAGE="http://www.php.net/"
+HOMEPAGE="http://www.openldap.org/"
 
 # Point to any required sources; these will be automatically downloaded by
 # gpkg. 
@@ -16,11 +16,11 @@ HOMEPAGE="http://www.php.net/"
 # $V = package version, such as 2.6.10
 
 #作者
-SCRIPT_AUTHORS="王江伟<jonsk.echo@gmail.com>"
+SCRIPT_AUTHORS=""
 
 #软件下载地址
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="http://cn.php.net/get/php-5.3.6.tar.bz2/from/this/mirror"
+SRC_URI="ftp://ftp.openldap.org/pub/OpenLDAP/openldap-release/openldap-2.4.19.tgz"
 
 
 #二进制软件包下载地址
@@ -48,8 +48,7 @@ xgb_unpack()
 {
 	#unpard file from $XGPATH_SOURCE to current directory.
 	echo "Unpacking to `pwd`"
-	cp $XGPATH_SOURCE/mirror $XGPATH_SOURCE/$N-$V$R.tar.bz2
-	tar xf $XGPATH_SOURCE/$N-$V$R.tar.bz2
+	tar xf $XGPATH_SOURCE/$N-$V$R.tgz
 }
 
 #配置函数
@@ -62,42 +61,14 @@ xgb_config()
 	cd $N-$V$R
 
 	#second, add package specified config params to XGB_CONFIG
-	XGB_CONFIG+="--prefix=/usr/ \
-	--sysconfdir=/etc/php \
-	--libdir=/usr/lib \
-	--localstatedir=/var \
-	--with-layout=GNU \
-	--with-mysql \
-	--with-mysql=mysqlnd \
-	--with-mysqli=mysqlnd \
-	--with-pdo-mysql=mysqlnd \
-	--with-mcrypt-dir=/usr/lib/libmcrypt \
-	--enable-sockets  \
-	--enable-sysvmsg  \
-	--enable-sysvsem  \
-	--enable-sysvshm  \
-	--enable-shmop \
-	--with-mcrypt \
-	--enable-exif  \
-	--enable-ftp  \
-	--with-iconv \
-	--enable-mbregex \
-	--enable-sqlite-utf8 \
-	--enable-mbstring  \
-	--enable-pcntl  \
-	--with-openssl \
-	--with-zlib \
-	--with-png-dir=/usr/ \
-	--with-jpeg-dir=/usr/ \
-	--with-freetype-dir=/usr/ \
-	--enable-gd-native-ttf  \
-	--enable-zip \
-	--enable-fastcgi \
-	--enable-force-cgi-redirect \
-	--disable-ipv6 \
-	--target=mips64el-unknown-linux-gnu \
-	--build=mips64el-unknown-linux-gnu \
-	--host=mips64el-unknown-linux-gnu"
+	XGB_CONFIG+="  -prefix=/usr --sysconfdir=/etc \
+	--disable-bdb --disable-hdb --with-ldbm-api=gdbm \
+	--libexecdir=/usr/lib/openldap --localstatedir=/srv/ldap --disable-debug \
+	--enable-dynamic --enable-crypt --enable-modules --enable-wrappers \
+	--enable-ldap=mod \
+	--enable-monitor=mod --enable-perl=mod --enable-relay=mod \
+	--enable-dyngroup=mod --enable-dynlist=mod --enable-memberof=mod \
+	--enable-ppolicy=mod --enable-valsort=mod"
 
 	#Third, call configure with $XGB_CONFIG
 	./configure $XGB_CONFIG
@@ -110,6 +81,7 @@ xgb_build()
 	echo "make $N-$V$R..."
 
 	#run make in current directory
+	make depend
 	make
 }
 
@@ -118,7 +90,7 @@ xgb_build()
 xgb_check()
 {
 	echo "checking $N-$V$R.."
-	make test
+	#make check
 }
 
 #安装函数
@@ -128,11 +100,22 @@ xgb_install()
 	echo "install to $XGPATH_DEST"
 
 	#install everything to $XGPATH_DEST
-#	make DESTDIR=$XGPATH_DEST install
-	make INSTALL_ROOT="$XGPATH_DEST" install || die "make install failed"
-	
-	mkdir -pv $XGPATH_DEST/etc/php
-	cp php.ini-production $XGPATH_DEST/etc/php/php.ini
+	make DESTDIR=$XGPATH_DEST install
+	ln -sv ../lib/openldap/slapd $XGPATH_DEST/usr/sbin/slapd
+	cd /var/xiange/xglibs/bootscripts/
+	make DESTDIR=$XGPATH_DEST install-openldap1 
+cat > $XGPATH_DEST/etc/openldap/ldap.conf << "EOF"
+# Begin /etc/openldap/ldap.conf
+
+BASE    <BASE DN>
+URI     ldap://<fqdn of ldap server>
+
+#SASL_MECH      GSSAPI
+#SASL_REALM     <REALM>
+#SASL_SECPROPS  none
+
+# End /etc/openldap/ldap.conf
+EOF
 }
 
 #安装后期配置函数，主要用于增加用户，修改程序权限，增加启动脚本
