@@ -14,6 +14,7 @@ pcre-8.10
 libmcrypt
 mhash
 mcrypt
+fcgi
 libxml2
 php-5.3.3
 sqlite-autoconf-3070500
