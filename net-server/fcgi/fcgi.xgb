@@ -48,7 +48,7 @@ xgb_unpack()
 {
 	#unpard file from $XGPATH_SOURCE to current directory.
 	echo "Unpacking to `pwd`"
-	tar xf $XGPATH_SOURCE/$N-$V$R.tar.gz
+	tar xf $XGPATH_SOURCE/fcgi.tar.gz
 }
 
 #≈‰÷√∫Ø ˝
@@ -58,7 +58,7 @@ xgb_config()
 	echo "config $N-$V$R..."
 
 	#fist, cd build directory
-	cd $N-$V$R
+	cd fcgi-2.4.0
 
 	#second, add package specified config params to XGB_CONFIG
 	XGB_CONFIG+="  --prefix=/usr"
