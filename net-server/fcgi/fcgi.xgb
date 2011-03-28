@@ -59,6 +59,7 @@ xgb_config()
 
 	#fist, cd build directory
 	cd fcgi-2.4.0
+	echo "#include <cstdio>" >>include/fcgio.h
 
 	#second, add package specified config params to XGB_CONFIG
 	XGB_CONFIG+="  --prefix=/usr \
