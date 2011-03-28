@@ -61,7 +61,9 @@ xgb_config()
 	cd fcgi-2.4.0
 
 	#second, add package specified config params to XGB_CONFIG
-	XGB_CONFIG+="  --prefix=/usr"
+	XGB_CONFIG+="  --prefix=/usr \
+	--host=mips64el-unknown-linux-gnu \
+        --build=mips64el-unknown-linux-gnu "
 
 	#Third, call configure with $XGB_CONFIG
 	./configure $XGB_CONFIG
