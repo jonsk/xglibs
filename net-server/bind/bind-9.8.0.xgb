@@ -4,11 +4,11 @@
 
 #简介
 # Short one-line description of this package.
-DESCRIPTION="Linux防火墙服务器"
+DESCRIPTIOk="Berkeley 因特网域名服务器"
 
 #项目主页
 # Homepage, not used by Portage directly but handy for developer reference
-HOMEPAGE="http://iptables.org/projects/iptables/index.html "
+HOMEPAGE="http://www.bind9.net/"
 
 # Point to any required sources; these will be automatically downloaded by
 # gpkg. 
@@ -20,8 +20,7 @@ SCRIPT_AUTHORS="王江伟<jonsk.echo@gmail.com>"
 
 #软件下载地址
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="http://iptables.org/projects/iptables/files/iptables-1.4.3.2.tar.bz2 \
-	http://ftp.netfilter.org/pub/iptables/iptables-1.4.1-rc2.tar.bz2"
+SRC_URI="http://ftp.isc.org/isc/bind9/9.8.0/bind-9.8.0.tar.gz"
 
 
 #二进制软件包下载地址
@@ -49,8 +48,7 @@ xgb_unpack()
 {
 	#unpard file from $XGPATH_SOURCE to current directory.
 	echo "Unpacking to `pwd`"
-	tar xf $XGPATH_SOURCE/$N-$V$R.tar.bz2
-	tar xf $XGPATH_SOURCE/iptables-1.4.1-rc2.tar.bz2
+	tar xf $XGPATH_SOURCE/$N-$V$R.tar.gz
 }
 
 #配置函数
@@ -61,12 +59,9 @@ xgb_config()
 
 	#fist, cd build directory
 	cd $N-$V$R
-        cp -ar ../iptables-1.4.1-rc2/include/linux/netfilter_ipv4/ipt_DSCP.h ./include/linux/netfilter_ipv4/
-        cp -ar ../iptables-1.4.1-rc2/include/linux/netfilter_ipv4/ipt_dscp.h ./include/linux/netfilter_ipv4/
 
 	#second, add package specified config params to XGB_CONFIG
-	XGB_CONFIG+=" --prefix=/usr --libexecdir=/lib32/iptables \
-	    --bindir=/sbin --sbindir=/sbin "
+	XGB_CONFIG+=" --prefix=/usr --sysconfdir=/etc --localstatedir=/var --enable-threads --with-libtool"
 
 	#Third, call configure with $XGB_CONFIG
 	./configure $XGB_CONFIG
@@ -99,9 +94,7 @@ xgb_install()
 	#install everything to $XGPATH_DEST
 	make DESTDIR=$XGPATH_DEST install
 	cd /var/xiange/xglibs/bootscripts/
-	make install-iptables
-	mkdir -pv $XGPATH_DEST/usr/include/linux/netfilter_ipv4
-	cp -ar /tmp/xiange/sources/iptables-1.4.3.2/include/linux/netfilter_ipv4/ipt_dscp.h $XGPATH_DEST/usr/include/linux/netfilter_ipv4/
+	make install-bind
 }
 
 #安装后期配置函数，主要用于增加用户，修改程序权限，增加启动脚本
@@ -109,6 +102,8 @@ xgb_install()
 xgb_postinst()
 {
 	echo "running after package installed..."
+	groupadd -g 52 named &&
+	useradd -c 'BIND User' -d /srv/named -g named -s /bin/false -u 52 named
 }
 
 #pre remove
