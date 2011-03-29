@@ -2,29 +2,20 @@
 #
 # Xiange Linux build scripts
 
-#简介
 # Short one-line description of this package.
-DESCRIPTION="Linux防火墙服务器"
+DESCRIPTION="Notifications daemons"
 
-#项目主页
 # Homepage, not used by Portage directly but handy for developer reference
-HOMEPAGE="http://iptables.org/projects/iptables/index.html "
+HOMEPAGE="http://www.galago-project.org/"
 
 # Point to any required sources; these will be automatically downloaded by
 # gpkg. 
 # $N = package name, such as autoconf, x-org
 # $V = package version, such as 2.6.10
 
-#作者
-SCRIPT_AUTHORS="王江伟<jonsk.echo@gmail.com>"
-
-#软件下载地址
-#SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="http://iptables.org/projects/iptables/files/iptables-1.4.3.2.tar.bz2 \
-	http://ftp.netfilter.org/pub/iptables/iptables-1.4.1-rc2.tar.bz2"
+SRC_URI="http://www.galago-project.org/files/releases/source/$N/$N-$V.tar.bz2"
 
 
-#二进制软件包下载地址
 # Binary package URI.
 BIN_URI=""
 
@@ -43,68 +34,54 @@ xgb_init()
 	echo "init $N-$V$R build script..."
 }
 
-#解压函数
 #unpack
 xgb_unpack()
 {
 	#unpard file from $XGPATH_SOURCE to current directory.
 	echo "Unpacking to `pwd`"
 	tar xf $XGPATH_SOURCE/$N-$V$R.tar.bz2
-	tar xf $XGPATH_SOURCE/iptables-1.4.1-rc2.tar.bz2
 }
 
-#配置函数
 #config
 xgb_config()
 {
 	echo "config $N-$V$R..."
 
 	#fist, cd build directory
-	cd $N-$V$R
-        cp -ar ../iptables-1.4.1-rc2/include/linux/netfilter_ipv4/ipt_DSCP.h ./include/linux/netfilter_ipv4/
-        cp -ar ../iptables-1.4.1-rc2/include/linux/netfilter_ipv4/ipt_dscp.h ./include/linux/netfilter_ipv4/
+	#cd $N-$V$R
 
 	#second, add package specified config params to XGB_CONFIG
-	XGB_CONFIG+=" --prefix=/usr --libexecdir=/lib32/iptables \
-	    --bindir=/sbin --sbindir=/sbin "
+	#XGB_CONFIG+=" --foo --bar "
 
 	#Third, call configure with $XGB_CONFIG
-	./configure $XGB_CONFIG
+	#./configure $XGB_CONFIG
 }
 
-#编译函数
 #build
 xgb_build()
 {
 	echo "make $N-$V$R..."
 
 	#run make in current directory
-	make
+	#make
 }
 
-#编译检查函数
-#checke
+#check
 xgb_check()
 {
 	echo "checking $N-$V$R.."
 	#make check
 }
 
-#安装函数
 #install
 xgb_install()
 {
 	echo "install to $XGPATH_DEST"
 
 	#install everything to $XGPATH_DEST
-	make DESTDIR=$XGPATH_DEST install
-	cd /var/xiange/xglibs/bootscripts/
-	make install-iptables
-	mkdir -pv $XGPATH_DEST/usr/include/linux/netfilter_ipv4
-	cp -ar $XGPATH_SOURCE/iptables-1.4.3.2/include/linux/netfilter_ipv4/ipt_dscp.h $XGPATH_DEST/usr/include/linux/netfilter_ipv4/
+	#make DESTDIR=$XGPATH_DEST install
 }
 
-#安装后期配置函数，主要用于增加用户，修改程序权限，增加启动脚本
 #post install
 xgb_postinst()
 {
@@ -117,7 +94,6 @@ xgb_prerm()
 	echo "running before package delete..."
 }
 
-#卸载函数，与xgb_postinst 相反
 #post remove
 xgb_postrm()
 {
