@@ -20,7 +20,7 @@ SCRIPT_AUTHORS="王江伟<jonsk.echo@gmail.com>"
 
 #软件下载地址
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="ftp://ftp.porcupine.org/mirrors/postfix-release/official/postfix-2.5.10.tar.gz"
+SRC_URI="ftp://ftp.porcupine.org/mirrors/postfix-release/official/postfix-2.8.2.tar.gz"
 
 
 #二进制软件包下载地址
