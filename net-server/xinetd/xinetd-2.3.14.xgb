@@ -20,7 +20,8 @@ SCRIPT_AUTHORS=""
 
 #软件下载地址
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="http://xiangelinux.googlecode.com/files/xinetd-2.3.14.tar.gz"
+SRC_URI="http://xiangelinux.googlecode.com/files/xinetd-2.3.14.tar.gz \"
+	http://xiangelinux.googlecode.com/files/xinetd-2.3.14-DESTDIR.patch"
 
 
 #二进制软件包下载地址
@@ -59,6 +60,7 @@ xgb_config()
 
 	#fist, cd build directory
 	cd $N-$V$R
+	patch -p0 < $XGPATH_SOURCE/xinetd-2.3.14-DESTDIR.patch
 
 	#second, add package specified config params to XGB_CONFIG
 	XGB_CONFIG+=" --prefix=/usr --with-loadavg \
