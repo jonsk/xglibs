@@ -20,14 +20,11 @@ php-5.3.6
 sqlite-autoconf-3070500
 lighttpd-1.4.28
 samba-3.5.8
-
 bind
 dhcp
-#distcc
 iptables
 ntp
-postfix
 proftpd
 rsync
 xinetd
-
+postfix
