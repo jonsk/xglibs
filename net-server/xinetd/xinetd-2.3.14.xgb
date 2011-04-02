@@ -20,7 +20,7 @@ SCRIPT_AUTHORS=""
 
 #»Ìº˛œ¬‘ÿµÿ÷∑
 #SRC_URI="http://foo.bar.com/$N-$V.tar.bz2"
-SRC_URI="http://xiangelinux.googlecode.com/files/xinetd-2.3.14.tar.gz \"
+SRC_URI="ftp://mirror.ovh.net/gentoo-distfiles/distfiles/xinetd-2.3.14.tar.gz \
 	http://xiangelinux.googlecode.com/files/xinetd-2.3.14-DESTDIR.patch"
 
 
